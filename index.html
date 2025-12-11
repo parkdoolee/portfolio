@@ -1,133 +1,229 @@
 <!DOCTYPE html>
 <html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>portfolio</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>portfolio</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link rel="stylesheet" href="./css/style.css" />
 
-  <link rel="stylesheet" href="./css/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/splitting/dist/splitting.css" />
+    <script src="https://unpkg.com/splitting/dist/splitting.min.js"></script>
 
-  <link rel="stylesheet" href="https://unpkg.com/splitting/dist/splitting.css" />
-  <script src="https://unpkg.com/splitting/dist/splitting.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.3.15/dist/lenis.min.js"></script>
+    <script src="./js/main.js" defer></script>
+  </head>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <script src="https://unpkg.com/lenis@1.3.15/dist/lenis.min.js"></script>
-  <script src="./js/main.js" defer></script>
-</head>
+  <body>
+    <main>
+      <section class="intro">
+        <ul class="txt">
+          <li>PARKDOOLEE</li>
+          <li>UX / UI</li>
+          <li>AI Tool</li>
+          <li>VScode</li>
+          <li>2025</li>
+        </ul>
 
-<body>
-  <main>
-    <section class="intro">
-      <ul class="txt">
-        <li>PARKDOOLEE</li>
-        <li>UX / UI</li>
-        <li>AI Tool</li>
-        <li>VScode</li>
-        <li>2025</li>
-      </ul>
+        <div class="glass_wrap">
+          <img src="./img/main/peopleNblack.png" class="base" />
+          <img src="./img/main/peopleY.png" class="overlay" />
+        </div>
+      </section>
 
-      <div class="glass_wrap">
-        <img src="./img/main/peopleNblack.png" class="base" />
-        <img src="./img/main/peopleY.png" class="overlay" />
-      </div>
-    </section>
+      <section class="identity">
+        <div class="identity_left" data-scroll-img>
+          <img src="./img/identity/identity.png" alt="img" />
+        </div>
+        <!-- //.identity_left -->
+        <div class="identity_wrap">
+          <div class="identity_right">
+            <div class="textBox_en">
+              <div class="top" data-scroll-lines>
+                <p>
+                  As a quiet surface with a <span>burning core</span>, I design
+                </p>
+                <p>moments that reveal what's unseen build brands</p>
+              </div>
 
-    <section class="identity">
-      <div class="identity_left" data-scroll-img>
-        <img src="./img/identity/identity.png" alt="img" />
-      </div>
-      <!-- //.identity_left -->
-      <div class="identity_wrap">
-        <div class="identity_right">
-          <div class="textBox_en">
-            <div class="top" data-scroll-lines>
+              <div class="bottom" data-scroll-lines>
+                <p>that speak without noise, and</p>
+                <p>create visuals that <span>open like blinds</span></p>
+                <p>into a world of deeper meaning.</p>
+              </div>
+            </div>
+            <!-- //.textBox_en -->
+
+            <div class="textBox_ko" data-scroll-fade>
               <p>
-                As a quiet surface with a <span>burning core</span>, I design
+                겉은 고요하지만, 속은 뜨겁게 타오르는 사람으로서<br />
+                보이지 않던 것을 드러내는 순간을 디자인합니다.<br />
+                소리 없이도 말하는 브랜드를 만들고 블라인드가 열리듯<br />
+                깊은 의미의 세계로 이어지는 비주얼을 만듭니다.
               </p>
-              <p>moments that reveal what's unseen build brands</p>
             </div>
+            <!-- //.textBox_ko -->
+          </div>
+          <!-- //.identity_right -->
+        </div>
+        <!-- //.identity_wrap -->
+      </section>
 
-            <div class="bottom" data-scroll-lines>
-              <p>that speak without noise, and</p>
-              <p>create visuals that <span>open like blinds</span></p>
-              <p>into a world of deeper meaning.</p>
+      <section class="multiDesigner">
+        <div class="multi_sticky">
+          <h2 class="multi_title">MULTI-DISCIPLINE DESIGNER</h2>
+          <!-- 이미지 컨테이너 -->
+          <div class="multi_visual">
+            <div class="multi_images">
+              <img
+                src="./img/multi/img1.png"
+                alt=""
+                class="multi_img"
+                data-index="0" />
+              <img
+                src="./img/multi/img2.png"
+                alt=""
+                class="multi_img"
+                data-index="1" />
+              <img
+                src="./img/multi/img3.png"
+                alt=""
+                class="multi_img"
+                data-index="2" />
+            </div>
+            <!-- //.multi_images -->
+            <video class="multi_video" muted playsinline>
+              <source src="./img/multi/video.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <!-- //.multi_visual -->
+          <div class="multi_text_group" data-group="0">
+            <p class="multi_text_en">
+              I began as a director of<br />
+              large-scale live experiences.
+            </p>
+            <div class="multi_ko_wrap">
+              <p class="multi_text_ko">
+                저는 대형 오프라인 경험을 연출하는 디렉터로 커리어를
+                시작했습니다.
+              </p>
+              <p class="multi_text_ko">
+                브랜드 런칭쇼, 전시, 스포츠 대회, 콘서트까지—
+              </p>
+              <p class="multi_text_ko">
+                사람들의 움직임을 설계하고 공간 전체의 흐름을 지휘했습니다.
+              </p>
             </div>
           </div>
-          <!-- //.textBox_en -->
+          <div class="multi_text_group" data-group="1">
+            <p class="multi_text_en">This is why I understand users—deeply.</p>
+            <div class="multi_ko_wrap">
+              <p class="multi_text_ko">
+                사람의 흐름을 읽고 경험을 설계해온 시간,
+              </p>
+              <p class="multi_text_ko">
+                브랜드 런칭쇼와 오프라인 행사를 기획하며 다져온 감각은
+              </p>
+              <p class="multi_text_ko">
+                디지털 프로덕트와 UX 디자인으로 이어졌습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- //.multi_sticky -->
+      <section class="project">
+        <h2 class="project_title" data-aos="zoom-out-up">PROJECT GALLERY</h2>
 
-          <div class="textBox_ko" data-scroll-fade>
-            <p>
-              겉은 고요하지만, 속은 뜨겁게 타오르는 사람으로서<br />
-              보이지 않던 것을 드러내는 순간을 디자인합니다.<br />
-              소리 없이도 말하는 브랜드를 만들고 블라인드가 열리듯<br />
-              깊은 의미의 세계로 이어지는 비주얼을 만듭니다.
-            </p>
-          </div>
-          <!-- //.textBox_ko -->
+        <div class="project_gallery_wrap">
+        <div class="project_panel" data-index="0">
+            <img src="./img/project/image1.png" alt="이미지 1" class="project_img" />
+            <div class="panel_description">
+                <div class="desc_content">
+                    <h3>PROJECT 01</h3>
+                    <p>
+                        대형 오프라인 경험을 연출하는 디렉터로 시작하여... (자세한 설명)
+                    </p>
+                    <div class="links">
+                        <a href="#" class="btn_link">프로젝트 상세 보기</a>
+                        <a href="#" class="btn_link">프로토타입</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- //.identity_right -->
-      </div>
-      <!-- //.identity_wrap -->
-    </section>
-
-    <section class="multiDesigner">
-      <div class="multi_sticky">
-        <h2 class="multi_title">MULTI-DISCIPLINE DESIGNER</h2>
-        <!-- 이미지 컨테이너 -->
-        <div class="multi_visual">
-          <div class="multi_images">
-            <img src="./img/multi/img1.png" alt="" class="multi_img" data-index="0" />
-            <img src="./img/multi/img2.png" alt="" class="multi_img" data-index="1" />
-            <img src="./img/multi/img3.png" alt="" class="multi_img" data-index="2" />
-          </div>
-          <!-- //.multi_images -->
-          <video class="multi_video" muted playsinline>
-            <source src="./img/multi/video.mp4" type="video/mp4" />
-          </video>
+        
+        <div class="project_panel" data-index="1">
+            <img src="./img/project/image1.png" alt="이미지 2" class="project_img" />
+            <div class="panel_description">
+                <div class="desc_content">
+                    <h3>PROJECT 02</h3>
+                    <p>
+                        두 번째 이미지에 대한 설명이 여기에 들어갑니다. (자세한 설명)
+                    </p>
+                    <div class="links">
+                        <a href="#" class="btn_link">프로젝트 상세 보기</a>
+                        <a href="#" class="btn_link">프로토타입</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- //.multi_visual -->
-        <div class="multi_text_group" data-group="0">
-          <p class="multi_text_en">
-            I began as a director of<br />
-            large-scale live experiences.
-          </p>
-          <div class="multi_ko_wrap">
-            <p class="multi_text_ko">
-              저는 대형 오프라인 경험을 연출하는 디렉터로 커리어를
-              시작했습니다.
-            </p>
-            <p class="multi_text_ko">
-              브랜드 런칭쇼, 전시, 스포츠 대회, 콘서트까지—
-            </p>
-            <p class="multi_text_ko">
-              사람들의 움직임을 설계하고 공간 전체의 흐름을 지휘했습니다.
-            </p>
-          </div>
+        
+        <div class="project_panel" data-index="2">
+            <img src="./img/project/image1.png" alt="이미지 3" class="project_img" />
+            <div class="panel_description">
+                <div class="desc_content">
+                    <h3>PROJECT 03</h3>
+                    <p>
+                        세 번째 이미지에 대한 설명이 여기에 들어갑니다. (자세한 설명)
+                    </p>
+                    <div class="links">
+                        <a href="#" class="btn_link">프로젝트 상세 보기</a>
+                        <a href="#" class="btn_link">프로토타입</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="multi_text_group" data-group="1">
-          <p class="multi_text_en">This is why I understand users—deeply.</p>
-          <div class="multi_ko_wrap">
-            <p class="multi_text_ko">
-              사람의 흐름을 읽고 경험을 설계해온 시간,
-            </p>
-            <p class="multi_text_ko">
-              브랜드 런칭쇼와 오프라인 행사를 기획하며 다져온 감각은
-            </p>
-            <p class="multi_text_ko">
-              디지털 프로덕트와 UX 디자인으로 이어졌습니다.
-            </p>
-          </div>
+        
+        <div class="project_panel" data-index="3">
+            <img src="./img/project/image1.png" alt="이미지 4" class="project_img" />
+            <div class="panel_description">
+                <div class="desc_content">
+                    <h3>PROJECT 04</h3>
+                    <p>
+                        네 번째 이미지에 대한 설명이 여기에 들어갑니다. (자세한 설명)
+                    </p>
+                    <div class="links">
+                        <a href="#" class="btn_link">프로젝트 상세 보기</a>
+                        <a href="#" class="btn_link">프로토타입</a>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <!-- //.multi_sticky -->
-    </section>
-  </main>
-</body>
-
+        
+        <div class="project_panel" data-index="4">
+            <img src="./img/project/image1.png" alt="이미지 5" class="project_img" />
+            <div class="panel_description">
+                <div class="desc_content">
+                    <h3>PROJECT 05</h3>
+                    <p>
+                        다섯 번째 이미지에 대한 설명이 여기에 들어갑니다. (자세한 설명)
+                    </p>
+                    <div class="links">
+                        <a href="#" class="btn_link">프로젝트 상세 보기</a>
+                        <a href="#" class="btn_link">프로토타입</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section><!-- //.project -->
+    </main>
+  </body>
 </html>

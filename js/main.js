@@ -43,8 +43,8 @@ window.addEventListener("DOMContentLoaded", () => {
     },
   });
 
+  // 마지막 영어 문장(index 4)과 한국어(index 5)를 같은 타이밍에
   allElements.forEach((el, i) => {
-    // 마지막 영어 문장(index 4)과 한국어(index 5)를 같은 타이밍에
     let timing = i * 0.5;
     if (i === 5) timing = 4 * 0.5;
 
@@ -120,7 +120,7 @@ if (multiSection) {
   // 초기 상태 설정
   gsap.set(visual, { opacity: 0, scale: 0.85 });
 
-  // ⭐ 추가: 제목 초기 상태 설정 (GSAP으로 제어하기 위해 초기 투명도를 1로 설정)
+  // 제목 초기 상태 설정 (GSAP으로 제어하기 위해 초기 투명도를 1로 설정)
   gsap.set(title, { y: 0, opacity: 1 });
 
   // 메인 타임라인 (스크롤에 연동)
@@ -139,7 +139,7 @@ if (multiSection) {
   });
 
   // ============================================
-  // ⭐ 제목 사라짐 (가장 먼저 시작)
+  // 제목 사라짐 (가장 먼저 시작)
   // ============================================
   multiTl.to(
     title,
@@ -288,4 +288,127 @@ if (multiSection) {
     },
     3.2
   );
+}
+
+// ============================================
+// PROJECT 섹션: 순차적 줌인/설명/전환 효과 (시작 지점 수정)
+// ============================================
+const projectSection = document.querySelector(".project");
+if (projectSection) {
+  const galleryWrap = document.querySelector(".project_gallery_wrap");
+  const panels = document.querySelectorAll(".project_panel");
+  const descPanels = document.querySelectorAll(".panel_description");
+
+  // (getPanelTransform 함수는 그대로 유지)
+  const getPanelTransform = (panel) => {
+    const panelRect = panel.getBoundingClientRect();
+    const viewportW = window.innerWidth;
+    const viewportH = window.innerHeight;
+    // ... (Transform 계산 로직)
+    const scaleX = viewportW / panelRect.width;
+    const scaleY = viewportH / panelRect.height;
+    const targetScale = Math.max(scaleX, scaleY);
+
+    const viewportCenterX = viewportW / 2;
+    const viewportCenterY = viewportH / 2;
+
+    const panelCenterX = panelRect.left + panelRect.width / 2;
+    const panelCenterY = panelRect.top + panelRect.height / 2;
+
+    const dx = viewportCenterX - panelCenterX;
+    const dy = viewportCenterY - panelCenterY;
+
+    const xTranslate = dx / targetScale;
+    const yTranslate = dy / targetScale;
+
+    return {
+      scale: targetScale,
+      x: xTranslate,
+      y: yTranslate,
+    };
+  };
+
+  // 전체 애니메이션을 제어하는 마스터 타임라인 설정
+  const totalScrollDistance = 1500;
+
+  const masterTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: projectSection,
+      // ⭐️ 수정: 이전 섹션(multiDesigner)의 끝 지점에서 시작 ⭐️
+      start: "top bottom", // Project 섹션의 상단이 뷰포트 하단에 닿을 때 (기본 스크롤 시작)
+      end: `+=${totalScrollDistance}vh`,
+      scrub: true,
+      pin: true,
+      pinSpacing: true,
+    },
+  });
+
+  // ... (masterTl 내부의 패널 애니메이션 로직은 그대로 유지)
+  panels.forEach((panel, i) => {
+    const transforms = getPanelTransform(panel);
+    const description = descPanels[i];
+
+    const durationZoom = 50;
+    const durationDesc = 20;
+    const durationWait = 10;
+    const totalPanelTime = durationZoom + durationDesc + durationWait;
+
+    const startTime = `+=${totalPanelTime * i}`;
+
+    masterTl.to(
+      galleryWrap,
+      {
+        scale: transforms.scale,
+        x: transforms.x,
+        y: transforms.y,
+        ease: "power2.inOut",
+        duration: durationZoom,
+      },
+      startTime
+    );
+
+    masterTl.to(
+      description,
+      {
+        opacity: 1,
+        visibility: "visible",
+        duration: durationDesc,
+        ease: "none",
+      },
+      `+=${durationZoom}`
+    );
+
+    masterTl.to(
+      {},
+      {
+        duration: durationWait,
+      },
+      `+=${durationDesc}`
+    );
+
+    masterTl.to(
+      description,
+      {
+        opacity: 0,
+        visibility: "hidden",
+        duration: durationDesc,
+        ease: "none",
+      },
+      `+=${durationWait}`
+    );
+
+    if (i === panels.length - 1) {
+      masterTl.to(
+        galleryWrap,
+        {
+          scale: 1,
+          x: 0,
+          y: 0,
+          ease: "power2.inOut",
+          duration: durationZoom,
+        },
+        `+=${durationDesc}`
+      );
+    }
+  });
 }
