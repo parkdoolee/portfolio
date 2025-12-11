@@ -91,12 +91,12 @@ main .intro .glass_wrap:hover::before {
 }
 
 /* identity */
-
 main .identity {
   width: 100%;
-  height: 1175px;
-  background-color: #0a0a0a;
+  height: 1200px;
+  background-color: #000;
   position: relative;
+  overflow: hidden;
 }
 
 main .identity .identity_wrap {
@@ -109,7 +109,7 @@ main .identity .identity_wrap {
 main .identity .identity_left {
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: -100px; /* 아래쪽으로 조정 */
   z-index: 1;
 }
 
@@ -120,27 +120,48 @@ main .identity .identity_left img {
 
 main .identity .identity_right {
   width: 100%;
-  /* max-width: 1638px; */
   color: #fff;
-  padding-top: 163px;
+  padding-top: 250px; /* 위쪽으로 조정 */
 }
 
-main .identity .identity_right .textBox_en h2 {
-  font-weight: 400;
+/* 줄 단위 애니메이션용 */
+[letters-fade-in] .line {
+  display: block;
+  will-change: transform, opacity, filter;
+}
+
+/* 타이틀 스타일 */
+main .identity .identity_right .textBox_en .top,
+main .identity .identity_right .textBox_en .bottom {
+  font-weight: 500;
   font-size: 75px;
+  line-height: 1.2;
 }
 
 main .identity .identity_right .textBox_en .top {
-  margin-left: 140px;
-}
-main .identity .identity_right .textBox_en .bottom {
-  margin-left: 679px;
+  margin-left: 120px;
 }
 
-main .identity .identity_right .textBox_en h2 span {
+main .identity .identity_right .textBox_en .bottom {
+  margin-left: 679px;
+  margin-top: 20px;
+}
+
+main .identity .identity_right .textBox_en p {
+  margin: 0;
+  padding: 0;
+}
+
+main .identity .identity_right .textBox_en span {
   font-family: "Antic Didone", serif;
   font-weight: 100;
   letter-spacing: -1.1%;
+}
+
+/* 한국어 설명 */
+main .identity .identity_right .textBox_ko {
+  margin-left: 959px;
+  margin-top: 90px;
 }
 
 main .identity .identity_right .textBox_ko p {
@@ -148,4 +169,30 @@ main .identity .identity_right .textBox_ko p {
   font-weight: normal;
   line-height: 145%;
   letter-spacing: -1.1%;
+}
+
+/* 줄 마스크 효과 - 왼쪽에서 오른쪽으로 나타남 */
+main .identity .identity_right .textBox_en p,
+main .identity .identity_right .textBox_ko p {
+  background: linear-gradient(
+    90deg,
+    #fff 0%,
+    #fff 30%,
+    rgba(255, 255, 255, 0.6) 45%,
+    rgba(255, 255, 255, 0.2) 55%,
+    transparent 70%,
+    transparent 100%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* multiDesigner */
+main .multiDesigner {
+  width: 100%;
+  height: 800px;
+  background-color: #000;
 }

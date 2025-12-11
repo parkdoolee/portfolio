@@ -4,9 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>portfolio</title>
+
     <link rel="stylesheet" href="./css/style.css" />
-    <!-- <link rel="stylesheet" href="./js/main.js" /> -->
+
+    <!-- Splitting -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/splitting/dist/splitting.css" />
+    <script src="https://unpkg.com/splitting/dist/splitting.min.js"></script>
+
+    <!-- GSAP + ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script src="./js/main.js" defer></script>
   </head>
+
   <body>
     <main>
       <section class="intro">
@@ -17,40 +30,37 @@
           <li>VScode</li>
           <li>2025</li>
         </ul>
+
         <div class="glass_wrap">
           <img src="./img/main/peopleNblack.png" class="base" />
           <img src="./img/main/peopleY.png" class="overlay" />
         </div>
-        <!-- //.glass_wrap -->
       </section>
-      <!-- //.intro -->
 
       <section class="identity">
-        <div class="identity_left">
+        <div class="identity_left" data-scroll-img>
           <img src="./img/identity/identity.png" alt="img" />
         </div>
         <!-- //.identity_left -->
         <div class="identity_wrap">
           <div class="identity_right">
             <div class="textBox_en">
-              <h2 letter-fade-in text-split class="top">
-                <div class="line">
+              <div class="top" data-scroll-lines>
+                <p>
                   As a quiet surface with a <span>burning core</span>, I design
-                </div>
-                <div class="line">
-                  moments that reveal what’s unseen build brands
-                </div>
-              </h2>
-              <h2 letter-fade-in text-split class="bottom">
-                <div class="line">that speak without noise, and</div>
-                <div class="line">
-                  create visuals that <span>open like blinds</span>
-                </div>
-                <div class="line">into a world of deeper meaning.</div>
-              </h2>
+                </p>
+                <p>moments that reveal what's unseen build brands</p>
+              </div>
+
+              <div class="bottom" data-scroll-lines>
+                <p>that speak without noise, and</p>
+                <p>create visuals that <span>open like blinds</span></p>
+                <p>into a world of deeper meaning.</p>
+              </div>
             </div>
             <!-- //.textBox_en -->
-            <div class="textBox_ko">
+
+            <div class="textBox_ko" data-scroll-fade>
               <p>
                 겉은 고요하지만, 속은 뜨겁게 타오르는 사람으로서<br />
                 보이지 않던 것을 드러내는 순간을 디자인합니다.<br />
@@ -64,7 +74,8 @@
         </div>
         <!-- //.identity_wrap -->
       </section>
-      <!-- //.identity -->
+
+      <section class="multiDesigner"></section>
     </main>
   </body>
 </html>
