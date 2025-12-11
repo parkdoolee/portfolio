@@ -1,6 +1,19 @@
 gsap.registerPlugin(ScrollTrigger);
 
 window.addEventListener("DOMContentLoaded", () => {
+  const lenis = new Lenis({
+    duration: 0.8,
+    easing: (t) => t, // 선형 (빠른 반응)
+    smooth: true,
+    smoothTouch: true, // 모바일 터치 스크롤 부드럽게
+  });
+
+  function raf(t) {
+    lenis.raf(t);
+    ScrollTrigger.update();
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
   // ============================================
   // 모든 줄 요소 수집 (기존 유지)
   // ============================================
@@ -26,7 +39,7 @@ window.addEventListener("DOMContentLoaded", () => {
       trigger: ".identity",
       start: "top 50%",
       end: "60% 30%",
-      scrub: 2,
+      scrub: 1,
     },
   });
 
@@ -53,8 +66,8 @@ window.addEventListener("DOMContentLoaded", () => {
   // 텍스트 영역: 패럴랙스 (빠르게 위로) (기존 유지)
   // ============================================
   gsap.to(".identity_right", {
-    y: -250,
-    ease: "none",
+    y: -350,
+    ease: "expo.out",
     scrollTrigger: {
       trigger: ".identity",
       start: "top bottom",

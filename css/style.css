@@ -56,30 +56,33 @@ main .intro .overlay {
   position: absolute;
   left: 0;
   top: 0;
-  width: 100%; /* 항상 위에 깔려 있지만, 마스크 때문에 기본적으로는 거의 안 보이는 상태 */
-  opacity: 1; /* 오른쪽에서 왼쪽으로 지나가는 빛 마스크 */
-  -webkit-mask-image: linear-gradient(
-    to left,
-    rgba(0, 0, 0, 0) 0%,
-    /* 오른쪽 쪽: 처음엔 안 보임 */ rgba(0, 0, 0, 0) 40%,
-    rgba(0, 0, 0, 1) 60%,
-    /* 중앙 쪽: 이 부분이 지나가며 보이게 됨 */ rgba(0, 0, 0, 1) 100%
-  );
-  -webkit-mask-size: 200% 100%; /* 가로 2배: 오른쪽 바깥에서 시작 */
-  -webkit-mask-position: 100% 0; /* 시작 위치: 오른쪽 끝 */
+  width: 100%;
+  /* 항상 위에 깔려 있지만, 마스크 때문에 기본적으로는 거의 안 보이는 상태 */
+  opacity: 1;
+  /* 오른쪽에서 왼쪽으로 지나가는 빛 마스크 */
+  -webkit-mask-image: linear-gradient(to left,
+      rgba(0, 0, 0, 0) 0%,
+      /* 오른쪽 쪽: 처음엔 안 보임 */
+      rgba(0, 0, 0, 0) 40%,
+      rgba(0, 0, 0, 1) 60%,
+      /* 중앙 쪽: 이 부분이 지나가며 보이게 됨 */
+      rgba(0, 0, 0, 1) 100%);
+  -webkit-mask-size: 200% 100%;
+  /* 가로 2배: 오른쪽 바깥에서 시작 */
+  -webkit-mask-position: 100% 0;
+  /* 시작 위치: 오른쪽 끝 */
   transition: -webkit-mask-position 4s cubic-bezier(0.18, 0.34, 0.15, 1);
 }
 
 /* 반사 레이어 */
 main .intro .glass_wrap::before {
   left: -40%;
-  right: auto; /* 방향 변경: to right */
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.25) 30%,
-    rgba(255, 255, 255, 0) 80%
-  );
+  right: auto;
+  /* 방향 변경: to right */
+  background: linear-gradient(to right,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.25) 30%,
+      rgba(255, 255, 255, 0) 80%);
   transform: translateX(0);
 }
 
@@ -94,6 +97,7 @@ main .intro .glass_wrap:hover::before {
 
 /* identity */
 main .identity {
+  padding-top: 30vh;
   width: 100%;
   height: 1200px;
   background-color: #000;
@@ -111,10 +115,11 @@ main .identity .identity_wrap {
 main .identity .identity_left {
   position: absolute;
   left: 0;
-  bottom: -100px;
+  bottom: 100px;
   z-index: 1;
-  height: 856px; /* 이미지 프레임의 높이 */
-  overflow: hidden;
+  height: 856px;
+  /* 이미지 프레임의 높이 */
+  /* overflow: hidden; */
 }
 
 main .identity .identity_left img {
@@ -125,7 +130,8 @@ main .identity .identity_left img {
 main .identity .identity_right {
   width: 100%;
   color: #fff;
-  padding-top: 250px; /* 위쪽으로 조정 */
+  padding-top: 250px;
+  /* 위쪽으로 조정 */
 }
 
 /* 줄 단위 애니메이션용 */
@@ -178,15 +184,13 @@ main .identity .identity_right .textBox_ko p {
 /* 줄 마스크 효과 - 왼쪽에서 오른쪽으로 나타남 */
 main .identity .identity_right .textBox_en p,
 main .identity .identity_right .textBox_ko p {
-  background: linear-gradient(
-    90deg,
-    #fff 0%,
-    #fff 30%,
-    rgba(255, 255, 255, 0.6) 45%,
-    rgba(255, 255, 255, 0.2) 55%,
-    transparent 70%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg,
+      #fff 0%,
+      #fff 30%,
+      rgba(255, 255, 255, 0.6) 45%,
+      rgba(255, 255, 255, 0.2) 55%,
+      transparent 70%,
+      transparent 100%);
   background-size: 300% 100%;
   background-position: 100% 0;
   -webkit-background-clip: text;
@@ -197,7 +201,8 @@ main .identity .identity_right .textBox_ko p {
 /* multiDesigner */
 main .multiDesigner {
   width: 100%;
-  height: 400vh; /* 스크롤 길이 */
+  height: 400vh;
+  /* 스크롤 길이 */
   background-color: #000;
   position: relative;
 }
