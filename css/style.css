@@ -1,6 +1,7 @@
 @charset "UTF-8";
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
 @import url("https://fonts.googleapis.com/css2?family=Antic+Didone&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap");
 
 body {
   margin: 0;
@@ -196,6 +197,128 @@ main .identity .identity_right .textBox_ko p {
 /* multiDesigner */
 main .multiDesigner {
   width: 100%;
-  height: 800px;
+  height: 400vh; /* 스크롤 길이 */
   background-color: #000;
+  position: relative;
+}
+
+main .multiDesigner .multi_sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 60px;
+}
+
+/* 타이틀 */
+main .multiDesigner .multi_title {
+  font-size: 140px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -1.1%px;
+  margin-bottom: 60px;
+  z-index: 10;
+  padding-right: 60px;
+  text-align: center;
+}
+
+/* 이미지/비디오 컨테이너 */
+main .multiDesigner .multi_visual {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 280px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+main .multiDesigner .multi_images {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+main .multiDesigner .multi_img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+main .multiDesigner .multi_img[data-index="0"] {
+  opacity: 1;
+}
+
+main .multiDesigner .multi_video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  z-index: 2;
+}
+
+/* 텍스트 그룹 */
+main .multiDesigner .multi_text_group {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 영어 텍스트 - 상단 100px */
+main .multiDesigner .multi_text_en {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Caveat", cursive;
+  font-size: 120px;
+  font-weight: 600;
+  line-height: 80%;
+  color: #313131;
+  margin: 0;
+  width: 100%;
+  text-align: center;
+}
+
+/* 한국어 텍스트 */
+main .multiDesigner .multi_text_ko {
+  font-size: 25px;
+  font-weight: 300;
+  color: #fff;
+  line-height: 120%;
+  letter-spacing: -1.1%;
+  margin: 0;
+  text-align: center;
+}
+
+/* 한국어 텍스트 래퍼 - 상단 650px */
+main .multiDesigner .multi_ko_wrap {
+  position: absolute;
+  top: 650px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
 }

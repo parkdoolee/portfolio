@@ -5,15 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>portfolio</title>
 
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
     <link rel="stylesheet" href="./css/style.css" />
 
-    <!-- Splitting -->
     <link
       rel="stylesheet"
       href="https://unpkg.com/splitting/dist/splitting.css" />
     <script src="https://unpkg.com/splitting/dist/splitting.min.js"></script>
 
-    <!-- GSAP + ScrollTrigger -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
@@ -75,7 +77,69 @@
         <!-- //.identity_wrap -->
       </section>
 
-      <section class="multiDesigner"></section>
+      <section class="multiDesigner">
+        <div class="multi_sticky">
+          <h2 class="multi_title">MULTI-DISCIPLINE DESIGNER</h2>
+          <!-- 이미지 컨테이너 -->
+          <div class="multi_visual">
+            <div class="multi_images">
+              <img
+                src="./img/multi/img1.png"
+                alt=""
+                class="multi_img"
+                data-index="0" />
+              <img
+                src="./img/multi/img2.png"
+                alt=""
+                class="multi_img"
+                data-index="1" />
+              <img
+                src="./img/multi/img3.png"
+                alt=""
+                class="multi_img"
+                data-index="2" />
+            </div>
+            <!-- //.multi_images -->
+            <video class="multi_video" muted playsinline>
+              <source src="./img/multi/video.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <!-- //.multi_visual -->
+          <div class="multi_text_group" data-group="0">
+            <p class="multi_text_en">
+              I began as a director of<br />
+              large-scale live experiences.
+            </p>
+            <div class="multi_ko_wrap">
+              <p class="multi_text_ko">
+                저는 대형 오프라인 경험을 연출하는 디렉터로 커리어를
+                시작했습니다.
+              </p>
+              <p class="multi_text_ko">
+                브랜드 런칭쇼, 전시, 스포츠 대회, 콘서트까지—
+              </p>
+              <p class="multi_text_ko">
+                사람들의 움직임을 설계하고 공간 전체의 흐름을 지휘했습니다.
+              </p>
+            </div>
+          </div>
+          <div class="multi_text_group" data-group="1">
+            <p class="multi_text_en">This is why I understand users—deeply.</p>
+            <div class="multi_ko_wrap">
+              <p class="multi_text_ko">
+                사람의 흐름을 읽고 경험을 설계해온 시간,
+              </p>
+              <p class="multi_text_ko">
+                브랜드 런칭쇼와 오프라인 행사를 기획하며 다져온 감각은
+              </p>
+              <p class="multi_text_ko">
+                디지털 프로덕트와 UX 디자인으로 이어졌습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+        <!-- //.multi_sticky -->
+      </section>
     </main>
   </body>
 </html>

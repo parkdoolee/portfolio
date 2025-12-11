@@ -64,12 +64,11 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   // ============================================
-  // 이미지 영역: 스크롤 패럴랙스 (밑점 95px 위치에서 시작) <-- 수정된 부분
+  // 이미지 영역: 스크롤 패럴랙스 (밑점 95px 위치에서 시작) (기존 유지)
   // ============================================
   const imgElement = document.querySelector(".identity_left img");
 
   // 시작 위치: 이미지가 컨테이너 아래쪽에서 시작하도록 충분히 큰 음수 값 설정
-  // 이 값을 조절하여 이미지 밑점이 95px 위치에 맞도록 조정해야 합니다.
   const startY = -550; // <--- 이 값을 조절해야 합니다.
 
   // 종료 위치: 시작점으로부터 +만큼 위로 이동하여 끝냄
@@ -93,3 +92,187 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   );
 });
+
+// ============================================
+// multiDesigner 섹션 애니메이션
+// ============================================
+const multiSection = document.querySelector(".multiDesigner");
+if (multiSection) {
+  const visual = document.querySelector(".multi_visual");
+  const images = document.querySelectorAll(".multi_img");
+  const video = document.querySelector(".multi_video");
+  const textGroups = document.querySelectorAll(".multi_text_group");
+  const title = document.querySelector(".multi_title"); // ⭐ 추가: 제목 요소 선택
+
+  // 초기 상태 설정
+  gsap.set(visual, { opacity: 0, scale: 0.85 });
+
+  // ⭐ 추가: 제목 초기 상태 설정 (GSAP으로 제어하기 위해 초기 투명도를 1로 설정)
+  gsap.set(title, { y: 0, opacity: 1 });
+
+  // 메인 타임라인 (스크롤에 연동)
+  const multiTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: ".multiDesigner",
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 2, // 더 부드럽게
+      onUpdate: (self) => {
+        if (self.progress > 0.9 && video.paused) {
+          video.play();
+        }
+      },
+    },
+  });
+
+  // ============================================
+  // ⭐ 제목 사라짐 (가장 먼저 시작)
+  // ============================================
+  multiTl.to(
+    title,
+    {
+      opacity: 0,
+      y: -50, // 위로 살짝 이동하며 사라짐
+      duration: 0.5,
+      ease: "power2.out",
+    },
+    0 // 타임라인 시작점
+  );
+
+  // ============================================
+  // 이미지 나타남 + 연속 확대 시작
+  // ============================================
+  multiTl.to(
+    visual,
+    {
+      opacity: 1,
+      scale: 1,
+      duration: 0.7,
+      ease: "power3.out",
+    },
+    0.6 // 제목이 사라지는 중간 이후에 시작
+  );
+
+  multiTl.to(
+    textGroups[0],
+    {
+      opacity: 1,
+      duration: 0.4,
+      ease: "power2.out",
+    },
+    0.9
+  );
+
+  // ============================================
+  // 이미지 연속 확대 (끊김 없이 계속 커짐)
+  // ============================================
+  multiTl.to(
+    visual,
+    {
+      width: "100vw",
+      height: "100vh",
+      duration: 2.5, // 길게 설정해서 끝까지 천천히 확대
+      ease: "none", // 일정한 속도로
+    },
+    0.9
+  );
+
+  // ============================================
+  // 텍스트1 사라짐
+  // ============================================
+  multiTl.to(
+    textGroups[0],
+    {
+      opacity: 0,
+      duration: 0.3,
+    },
+    1.3
+  );
+
+  // ============================================
+  // 이미지1 → 이미지2 (확대 중간에 전환)
+  // ============================================
+  multiTl.to(
+    images[0],
+    {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power1.inOut",
+    },
+    1.4
+  );
+  multiTl.to(
+    images[1],
+    {
+      opacity: 1,
+      duration: 0.5,
+      ease: "power1.inOut",
+    },
+    1.4
+  );
+
+  // 텍스트2 나타남
+  multiTl.to(
+    textGroups[1],
+    {
+      opacity: 1,
+      duration: 0.4,
+      ease: "power2.out",
+    },
+    1.6
+  );
+
+  // 텍스트2 사라짐
+  multiTl.to(
+    textGroups[1],
+    {
+      opacity: 0,
+      duration: 0.3,
+    },
+    2.2
+  );
+
+  // ============================================
+  // 이미지2 → 이미지3 (확대 계속되면서 전환)
+  // ============================================
+  multiTl.to(
+    images[1],
+    {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power1.inOut",
+    },
+    2.4
+  );
+  multiTl.to(
+    images[2],
+    {
+      opacity: 1,
+      duration: 0.5,
+      ease: "power1.inOut",
+    },
+    2.4
+  );
+
+  // ============================================
+  // 비디오 페이드인 + 재생
+  // ============================================
+  multiTl.to(
+    images[2],
+    {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power1.inOut",
+    },
+    3.2
+  );
+  multiTl.to(
+    video,
+    {
+      opacity: 1,
+      duration: 0.5,
+      ease: "power1.inOut",
+    },
+    3.2
+  );
+}
