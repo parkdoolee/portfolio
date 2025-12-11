@@ -17,6 +17,7 @@ section {
 
 main .intro {
   background-color: #0a0a0a;
+  /* height: 100vh; */
 }
 
 main .intro .txt {
@@ -109,8 +110,10 @@ main .identity .identity_wrap {
 main .identity .identity_left {
   position: absolute;
   left: 0;
-  bottom: -100px; /* 아래쪽으로 조정 */
+  bottom: -100px;
   z-index: 1;
+  height: 856px; /* 이미지 프레임의 높이 */
+  overflow: hidden;
 }
 
 main .identity .identity_left img {
