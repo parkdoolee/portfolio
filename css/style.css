@@ -427,22 +427,40 @@ main .project .gallery__item[data-index="4"] {
 
 /* 프로젝트 상세 섹션 */
 main .project .project-detail {
-  min-height: 100vh;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
+  height: 200vh; /* 이미지 100vh + 설명 100vh */
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: transparent;
-  z-index: 10;
-  padding: 100px 5rem;
+  flex-direction: column;
+  background-color: #0a0a0a;
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+}
+
+main .project .project-detail .detail-image {
+  width: 100%;
+  height: 100vh;
+  flex-shrink: 0;
+}
+
+main .project .project-detail .detail-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 main .project .project-detail .detail-content {
-  max-width: 800px;
-  text-align: center;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 5rem;
+  background-color: #0a0a0a;
 }
 
 main .project .project-detail .detail-content h3 {
