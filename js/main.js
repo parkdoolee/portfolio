@@ -460,60 +460,96 @@ if (projectSection) {
 }
 
 // ============================================
-// CAREER 섹션: 카드 패럴랙스 + 자동 슬라이더
+// CAREER 섹션: 세로 슬라이드 + 스냅핑 전환
 // ============================================
 const careerSection = document.querySelector(".career");
 if (careerSection) {
-  const cards = document.querySelectorAll(".careerCard");
+  const panels = document.querySelectorAll(".careerPage");
+  const panelTitles = document.querySelectorAll(".page_title");
+  const panelWrap = document.querySelector(".career_panels");
+  const numPanels = panels.length;
+  const panelHeight = window.innerHeight;
 
-  // 각 카드에 패럴랙스 효과 (스크롤 시 빠르게 올라옴)
-  cards.forEach((card, index) => {
-    // 카드마다 다른 속도
-    const speeds = [-80, -150, -120, -180, -100];
-    const speed = speeds[index] || -100;
-
-    gsap.to(card, {
-      y: speed,
-      ease: "none",
-      scrollTrigger: {
-        trigger: card,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 1,
-      },
-    });
-
-    // 카드 나타남 애니메이션
-    gsap.from(card, {
-      y: 150,
-      opacity: 0,
-      duration: 1,
-      ease: "power2.out",
-      scrollTrigger: {
-        trigger: card,
-        start: "top 90%",
-        toggleActions: "play none none none",
-      },
-    });
+  // 1. 전체 career 섹션 높이 설정
+  // 5개 패널을 순차적으로 보여주기 위해 총 높이를 설정합니다.
+  // (패널 수 * 뷰포트 높이)
+  gsap.set(careerSection, {
+    height: numPanels * panelHeight,
   });
 
-  // 자동 슬라이더
-  const sliders = document.querySelectorAll(".careerCard_slider");
+  // 2. 메인 전환 애니메이션 (Vertical Translation)
+  const careerTl = gsap.timeline({
+    scrollTrigger: {
+      trigger: careerSection,
+      pin: true, // 섹션 전체를 뷰포트에 고정
+      scrub: 1,
+      start: "top top",
+      end: "bottom bottom",
+      // 스냅핑 설정: 0, 0.25, 0.5, 0.75, 1 (4번의 전환이므로 5개의 지점)
+      snap: 1 / (numPanels - 1),
+    },
+  });
 
-  sliders.forEach((slider, sliderIndex) => {
-    const slides = slider.querySelectorAll(".careerCard_slide");
-    let currentIndex = 0;
-    const slideCount = slides.length;
+  // 3. 패널 전환: 각 패널을 100vh씩 위로 끌어올림
+  panels.forEach((panel, i) => {
+    const title = panelTitles[i];
 
-    // 각 슬라이더마다 시작 타이밍 다르게 (자연스러운 느낌)
-    const delay = sliderIndex * 500;
+    if (i < numPanels - 1) {
+      // 마지막 패널을 제외하고, 다음 패널로 이동
+      careerTl.to(
+        panelWrap,
+        {
+          y: -panelHeight * (i + 1), // -100vh, -200vh, -300vh, -400vh
+          duration: 1, // 각 전환에 필요한 타임라인 진행 속도
+          ease: "power2.inOut",
+        },
+        i
+      ); // 각 전환 시작 지점을 타임라인 인덱스로 지정
+    }
 
-    setTimeout(() => {
-      setInterval(() => {
-        slides[currentIndex].classList.remove("active");
-        currentIndex = (currentIndex + 1) % slideCount;
-        slides[currentIndex].classList.add("active");
-      }, 3000);
-    }, delay);
+    // 4. 타이틀 애니메이션 (전환 구간 중앙에서 나타나고 사라짐)
+    // 현재 전환이 시작될 때 (i) 나타나서, 다음 전환 시작 직전(i + 0.9)에 사라지도록 설정
+    careerTl
+      .fromTo(
+        title,
+        { y: 50, scale: 0.9, opacity: 0, filter: "blur(10px)" },
+        {
+          y: 0,
+          scale: 1,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 0.4,
+          ease: "power2.out",
+        },
+        i // 해당 전환의 초반에 나타남
+      )
+      .to(
+        title,
+        {
+          y: -50,
+          scale: 0.9,
+          opacity: 0,
+          filter: "blur(10px)",
+          duration: 0.4,
+          ease: "power2.in",
+        },
+        i + 0.6 // 해당 전환의 후반에 사라짐 (0.6 ~ 0.8 사이)
+      );
+  });
+
+  // 5. 창 크기 변경 시 ScrollTrigger 및 높이 재계산
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      ScrollTrigger.getAll().forEach((st) => {
+        if (st.trigger === careerSection) {
+          st.kill();
+        }
+      });
+      gsap.set(careerSection, { clearProps: "height" });
+      gsap.set(panelWrap, { clearProps: "y" });
+      ScrollTrigger.refresh();
+    }, 250);
   });
 }
