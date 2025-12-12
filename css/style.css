@@ -504,7 +504,7 @@ main .career {
   position: relative;
   background-color: #0a0a0a;
   color: #fff;
-  padding: 100px 60px 150px;
+  padding: 100px 60px;
   min-height: 100vh;
 }
 
@@ -522,21 +522,21 @@ main .career .careerCard {
 
 /* 카드별 위치와 크기 */
 main .career .careerCard[data-card="1"] {
-  top: 200px;
+  top: 718px;
   left: 60px;
   width: 500px;
   height: 500px;
 }
 
 main .career .careerCard[data-card="2"] {
-  top: 50px;
+  top: 200px;
   right: 100px;
   width: 800px;
   height: 800px;
 }
 
 main .career .careerCard[data-card="3"] {
-  top: 650px;
+  top: 1583px;
   left: 50%;
   transform: translateX(-50%);
   width: 600px;
@@ -544,15 +544,15 @@ main .career .careerCard[data-card="3"] {
 }
 
 main .career .careerCard[data-card="4"] {
-  top: 1100px;
+  top: 2550px;
   left: 60px;
   width: 1000px;
   height: 1000px;
 }
 
 main .career .careerCard[data-card="5"] {
-  top: 1450px;
-  right: 150px;
+  top: 3335px;
+  right: 60px;
   width: 500px;
   height: 500px;
 }
@@ -569,7 +569,6 @@ main .career .careerCard_period {
 main .career .careerCard_media {
   width: 100%;
   height: 100%;
-  border-radius: 8px;
   overflow: hidden;
   background-color: #1a1a1a;
 }
