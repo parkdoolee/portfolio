@@ -291,124 +291,128 @@ if (multiSection) {
 }
 
 // ============================================
-// PROJECT 섹션: 순차적 줌인/설명/전환 효과 (시작 지점 수정)
+// PROJECT 섹션: 그리드 전체 확대 → 설명 → 복귀 반복
 // ============================================
 const projectSection = document.querySelector(".project");
 if (projectSection) {
-  const galleryWrap = document.querySelector(".project_gallery_wrap");
-  const panels = document.querySelectorAll(".project_panel");
-  const descPanels = document.querySelectorAll(".panel_description");
+  const galleryWrap = document.querySelector(".gallery-wrap");
+  const gallery = document.querySelector(".gallery");
+  const items = document.querySelectorAll(".gallery__item");
+  const details = document.querySelectorAll(".project-detail");
+  const panelCount = items.length;
 
-  // (getPanelTransform 함수는 그대로 유지)
-  const getPanelTransform = (panel) => {
-    const panelRect = panel.getBoundingClientRect();
-    const viewportW = window.innerWidth;
-    const viewportH = window.innerHeight;
-    // ... (Transform 계산 로직)
-    const scaleX = viewportW / panelRect.width;
-    const scaleY = viewportH / panelRect.height;
-    const targetScale = Math.max(scaleX, scaleY);
+  // 각 패널이 화면을 꽉 채우기 위한 scale과 translate 계산
+  const getTransformForPanel = (index) => {
+    const item = items[index];
+    const galleryRect = gallery.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
 
-    const viewportCenterX = viewportW / 2;
-    const viewportCenterY = viewportH / 2;
+    // 패널이 화면을 꽉 채우려면 얼마나 확대해야 하는지
+    const scaleX = window.innerWidth / itemRect.width;
+    const scaleY = window.innerHeight / itemRect.height;
+    const scale = Math.min(scaleX, scaleY);
 
-    const panelCenterX = panelRect.left + panelRect.width / 2;
-    const panelCenterY = panelRect.top + panelRect.height / 2;
+    // 갤러리 중심 기준으로 해당 패널을 화면 중앙으로 이동
+    const galleryCenterX = galleryRect.left + galleryRect.width / 2;
+    const galleryCenterY = galleryRect.top + galleryRect.height / 2;
+    const itemCenterX = itemRect.left + itemRect.width / 2;
+    const itemCenterY = itemRect.top + itemRect.height / 2;
 
-    const dx = viewportCenterX - panelCenterX;
-    const dy = viewportCenterY - panelCenterY;
+    // 패널 중심을 화면 중앙으로 이동시키기 위한 offset
+    const offsetX = (window.innerWidth / 2 - itemCenterX) * (1 / scale);
+    const offsetY = (window.innerHeight / 2 - itemCenterY) * (1 / scale);
 
-    const xTranslate = dx / targetScale;
-    const yTranslate = dy / targetScale;
-
-    return {
-      scale: targetScale,
-      x: xTranslate,
-      y: yTranslate,
-    };
+    return { scale, offsetX, offsetY };
   };
 
-  // 전체 애니메이션을 제어하는 마스터 타임라인 설정
-  const totalScrollDistance = 1500;
+  // 마스터 타임라인 생성
+  const createAnimation = () => {
+    // 기존 ScrollTrigger 제거
+    ScrollTrigger.getAll().forEach((st) => {
+      if (
+        st.vars.trigger === galleryWrap ||
+        st.vars.trigger === projectSection
+      ) {
+        st.kill();
+      }
+    });
 
-  const masterTl = gsap.timeline({
-    scrollTrigger: {
-      trigger: projectSection,
-      // ⭐️ 수정: 이전 섹션(multiDesigner)의 끝 지점에서 시작 ⭐️
-      start: "top bottom", // Project 섹션의 상단이 뷰포트 하단에 닿을 때 (기본 스크롤 시작)
-      end: `+=${totalScrollDistance}vh`,
-      scrub: true,
+    // 갤러리 초기화
+    gsap.set(gallery, { scale: 1, x: 0, y: 0 });
+
+    // 첫 번째: 갤러리 확대 애니메이션 (패널 0번으로)
+    const transform0 = getTransformForPanel(0);
+
+    ScrollTrigger.create({
+      trigger: galleryWrap,
+      start: "top top",
+      end: "+=100%",
       pin: true,
-      pinSpacing: true,
-    },
-  });
-
-  // ... (masterTl 내부의 패널 애니메이션 로직은 그대로 유지)
-  panels.forEach((panel, i) => {
-    const transforms = getPanelTransform(panel);
-    const description = descPanels[i];
-
-    const durationZoom = 50;
-    const durationDesc = 20;
-    const durationWait = 10;
-    const totalPanelTime = durationZoom + durationDesc + durationWait;
-
-    const startTime = `+=${totalPanelTime * i}`;
-
-    masterTl.to(
-      galleryWrap,
-      {
-        scale: transforms.scale,
-        x: transforms.x,
-        y: transforms.y,
-        ease: "power2.inOut",
-        duration: durationZoom,
+      scrub: 1,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const t = getTransformForPanel(0);
+        gsap.set(gallery, {
+          scale: 1 + (t.scale - 1) * progress,
+          x: t.offsetX * progress,
+          y: t.offsetY * progress,
+        });
       },
-      startTime
-    );
+    });
 
-    masterTl.to(
-      description,
-      {
-        opacity: 1,
-        visibility: "visible",
-        duration: durationDesc,
-        ease: "none",
-      },
-      `+=${durationZoom}`
-    );
+    // 이후 패널들: 설명 → 다시 갤러리 확대 반복
+    details.forEach((detail, i) => {
+      // 설명 섹션은 그냥 스크롤
+      // 다음 패널 확대 (마지막이 아닌 경우)
+      if (i < panelCount - 1) {
+        // 다음 갤러리 확대를 위한 핀
+        ScrollTrigger.create({
+          trigger: detail,
+          start: "bottom bottom",
+          end: "+=100%",
+          pin: galleryWrap,
+          pinSpacing: false,
+          scrub: 1,
+          onUpdate: (self) => {
+            const progress = self.progress;
+            const nextIndex = i + 1;
+            const t = getTransformForPanel(nextIndex);
 
-    masterTl.to(
-      {},
-      {
-        duration: durationWait,
-      },
-      `+=${durationDesc}`
-    );
+            // 이전 상태에서 다음 상태로 전환
+            // progress 0: 원래 크기, progress 1: 다음 패널 확대
+            if (progress < 0.5) {
+              // 축소 단계
+              const shrinkProgress = progress * 2;
+              const prevT = getTransformForPanel(i);
+              gsap.set(gallery, {
+                scale: prevT.scale - (prevT.scale - 1) * shrinkProgress,
+                x: prevT.offsetX * (1 - shrinkProgress),
+                y: prevT.offsetY * (1 - shrinkProgress),
+              });
+            } else {
+              // 확대 단계
+              const growProgress = (progress - 0.5) * 2;
+              gsap.set(gallery, {
+                scale: 1 + (t.scale - 1) * growProgress,
+                x: t.offsetX * growProgress,
+                y: t.offsetY * growProgress,
+              });
+            }
+          },
+        });
+      }
+    });
+  };
 
-    masterTl.to(
-      description,
-      {
-        opacity: 0,
-        visibility: "hidden",
-        duration: durationDesc,
-        ease: "none",
-      },
-      `+=${durationWait}`
-    );
+  // 초기 실행
+  createAnimation();
 
-    if (i === panels.length - 1) {
-      masterTl.to(
-        galleryWrap,
-        {
-          scale: 1,
-          x: 0,
-          y: 0,
-          ease: "power2.inOut",
-          duration: durationZoom,
-        },
-        `+=${durationDesc}`
-      );
-    }
+  // 리사이즈 대응
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      createAnimation();
+    }, 250);
   });
 }

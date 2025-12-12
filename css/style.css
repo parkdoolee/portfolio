@@ -333,135 +333,143 @@ main .multiDesigner .multi_ko_wrap {
 }
 
 /* ============================================ */
-/* PROJECT 섹션 스타일 (16열 Grid 기반 최종 적용) */
+/* PROJECT 섹션 스타일 */
 /* ============================================ */
 main .project {
-  height: 100vh;
   position: relative;
-  overflow: hidden;
   background-color: #0a0a0a;
   color: #fff;
-  /* 이전 섹션과의 상단 마진 제거 */
-  margin-top: 0;
+  overflow: hidden;
 }
 
-/* 타이틀 위치 조정 */
 main .project .project_title {
-  position: absolute;
+  position: fixed;
   top: 50px;
   left: 50%;
   transform: translateX(-50%);
   color: #fff;
   font-size: 80px;
   font-weight: 600;
-  z-index: 50;
-  text-align: center;
-  /* 애니메이션 시 갤러리 위에 보이도록 높은 z-index 유지 */
   z-index: 100;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
 }
 
-/* 갤러리 랩퍼: 핀 요소이자 5개 패널의 그리드 컨테이너 */
-main .project .project_gallery_wrap {
+main .project .project_title.visible {
+  opacity: 1;
+}
+
+main .project .project-container {
+  position: relative;
+}
+
+/* 갤러리 래퍼 - 화면 꽉 채움 */
+main .project .gallery-wrap {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 벤토 그리드 갤러리 - 화면 전체 사용 */
+main .project .gallery {
   position: absolute;
-  width: 100%;
-  height: 100%;
   top: 0;
   left: 0;
+  width: 100vw;
+  height: 100vh;
   display: grid;
-
-  /* ⭐️ 16개의 동일한 비율 열로 분할 (735:735:450 / 960:960 비율) ⭐️ */
-  grid-template-columns: repeat(16, 1fr);
-  /* Row Ratio (Height): 636 : 444 (약 1.43fr : 1fr) */
-  grid-template-rows: 1.43fr 1fr;
-
-  /* ⭐️ 패널 사이의 간격 및 전체 여백 제거 ⭐️ */
-  gap: 0;
-  padding: 0;
+  gap: 4px;
+  grid-template-columns: 6fr 6fr 4fr;
+  grid-template-rows: 1fr 1fr;
+  transform-origin: 0 0;
 }
 
-/* 이미지 패널 공통 */
-main .project .project_panel {
+/* 갤러리 아이템 */
+main .project .gallery__item {
   position: relative;
   overflow: hidden;
   background-color: #1a1a1a;
-  margin: 0;
-  padding: 0;
 }
 
-/* 1번 패널 (index="0"): 1행 1열, 6fr 너비 (735px 비율) */
-main .project .project_panel[data-index="0"] {
-  grid-column: 1 / span 6; /* 1열부터 6칸 차지 */
-  grid-row: 1 / 2;
-}
-
-/* 2번 패널 (index="1"): 1행 7열, 6fr 너비 (735px 비율) */
-main .project .project_panel[data-index="1"] {
-  grid-column: 7 / span 6; /* 7열부터 6칸 차지 */
-  grid-row: 1 / 2;
-}
-
-/* 3번 패널 (index="2"): 1행 13열, 4fr 너비 (450px 비율) */
-main .project .project_panel[data-index="2"] {
-  grid-column: 13 / span 4; /* 13열부터 4칸 차지 */
-  grid-row: 1 / 2;
-}
-
-/* 4번 패널 (index="3"): 2행 1열, 8fr 너비 (960px 비율) */
-main .project .project_panel[data-index="3"] {
-  grid-column: 1 / span 8; /* 1열부터 8칸 차지 */
-  grid-row: 2 / 3;
-}
-
-/* 5번 패널 (index="4"): 2행 9열, 8fr 너비 (960px 비율) */
-main .project .project_panel[data-index="4"] {
-  grid-column: 9 / span 8; /* 9열부터 8칸 차지 */
-  grid-row: 2 / 3;
-}
-
-/* 이미지 */
-main .project .project_img {
+main .project .gallery__item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform-origin: center center;
 }
 
-/* ⭐️ 설명 오버레이 스타일 (HTML 구조 변경에 맞춤) ⭐️ */
-main .project .project_panel .panel_description {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.85); /* 짙은 배경 */
-  color: #fff;
+/* 그리드 배치 */
+main .project .gallery__item[data-index="0"] {
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+}
+
+main .project .gallery__item[data-index="1"] {
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+}
+
+main .project .gallery__item[data-index="2"] {
+  grid-column: 3 / 4;
+  grid-row: 1 / 2;
+}
+
+main .project .gallery__item[data-index="3"] {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+}
+
+main .project .gallery__item[data-index="4"] {
+  grid-column: 2 / 4;
+  grid-row: 2 / 3;
+}
+
+/* 프로젝트 상세 섹션 */
+main .project .project-detail {
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  background-color: #0a0a0a;
+  padding: 100px 5rem;
+}
+
+main .project .project-detail .detail-content {
+  max-width: 800px;
   text-align: center;
-  /* 애니메이션 초기 상태 */
-  opacity: 0;
-  visibility: hidden;
-  z-index: 5;
 }
 
-main .project .project_panel .panel_description .desc_content {
-  max-width: 500px;
-  padding: 40px;
+main .project .project-detail .detail-content h3 {
+  font-size: 48px;
+  font-weight: 600;
+  margin-bottom: 30px;
 }
 
-main .project .project_panel .panel_description .desc_content h3 {
-  font-size: 30px;
-  margin-bottom: 20px;
+main .project .project-detail .detail-content p {
+  font-size: 20px;
+  line-height: 1.8;
+  color: #ccc;
+  margin-bottom: 40px;
 }
 
-/* 버튼 스타일 */
-main .project .project_panel .panel_description .links a {
+main .project .project-detail .links {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+main .project .project-detail .links .btn_link {
   display: inline-block;
-  margin: 15px 10px;
-  padding: 10px 20px;
+  padding: 15px 30px;
   border: 1px solid #fff;
   color: #fff;
   text-decoration: none;
-  transition: background-color 0.3s;
+  font-size: 16px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+main .project .project-detail .links .btn_link:hover {
+  background-color: #fff;
+  color: #000;
 }
