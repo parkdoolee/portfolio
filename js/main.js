@@ -458,3 +458,62 @@ if (projectSection) {
     }, 250);
   });
 }
+
+// ============================================
+// CAREER 섹션: 카드 패럴랙스 + 자동 슬라이더
+// ============================================
+const careerSection = document.querySelector(".career");
+if (careerSection) {
+  const cards = document.querySelectorAll(".careerCard");
+
+  // 각 카드에 패럴랙스 효과 (스크롤 시 빠르게 올라옴)
+  cards.forEach((card, index) => {
+    // 카드마다 다른 속도
+    const speeds = [-80, -150, -120, -180, -100];
+    const speed = speeds[index] || -100;
+
+    gsap.to(card, {
+      y: speed,
+      ease: "none",
+      scrollTrigger: {
+        trigger: card,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 1,
+      },
+    });
+
+    // 카드 나타남 애니메이션
+    gsap.from(card, {
+      y: 150,
+      opacity: 0,
+      duration: 1,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: card,
+        start: "top 90%",
+        toggleActions: "play none none none",
+      },
+    });
+  });
+
+  // 자동 슬라이더
+  const sliders = document.querySelectorAll(".careerCard_slider");
+
+  sliders.forEach((slider, sliderIndex) => {
+    const slides = slider.querySelectorAll(".careerCard_slide");
+    let currentIndex = 0;
+    const slideCount = slides.length;
+
+    // 각 슬라이더마다 시작 타이밍 다르게 (자연스러운 느낌)
+    const delay = sliderIndex * 500;
+
+    setTimeout(() => {
+      setInterval(() => {
+        slides[currentIndex].classList.remove("active");
+        currentIndex = (currentIndex + 1) % slideCount;
+        slides[currentIndex].classList.add("active");
+      }, 3000);
+    }, delay);
+  });
+}

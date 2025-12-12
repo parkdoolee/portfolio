@@ -496,3 +496,106 @@ main .project .project-detail .links .btn_link:hover {
   background-color: #fff;
   color: #000;
 }
+
+/* ============================================ */
+/* CAREER 섹션 스타일 */
+/* ============================================ */
+main .career {
+  position: relative;
+  background-color: #0a0a0a;
+  color: #fff;
+  padding: 100px 60px 150px;
+  min-height: 100vh;
+}
+
+main .career .career_container {
+  position: relative;
+  width: 100%;
+  height: 4000px; /* 전체 높이 */
+}
+
+/* 개별 카드 */
+main .career .careerCard {
+  position: absolute;
+  will-change: transform;
+}
+
+/* 카드별 위치와 크기 */
+main .career .careerCard[data-card="1"] {
+  top: 200px;
+  left: 60px;
+  width: 500px;
+  height: 500px;
+}
+
+main .career .careerCard[data-card="2"] {
+  top: 50px;
+  right: 100px;
+  width: 800px;
+  height: 800px;
+}
+
+main .career .careerCard[data-card="3"] {
+  top: 650px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+}
+
+main .career .careerCard[data-card="4"] {
+  top: 1100px;
+  left: 60px;
+  width: 1000px;
+  height: 1000px;
+}
+
+main .career .careerCard[data-card="5"] {
+  top: 1450px;
+  right: 150px;
+  width: 500px;
+  height: 500px;
+}
+
+/* 날짜 텍스트 */
+main .career .careerCard_period {
+  font-size: 25px;
+  color: #888;
+  margin: 0 0 15px 0;
+  font-weight: 400;
+}
+
+/* 미디어 영역 */
+main .career .careerCard_media {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #1a1a1a;
+}
+
+main .career .careerCard_slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+main .career .careerCard_slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+}
+
+main .career .careerCard_slide.active {
+  opacity: 1;
+}
+
+main .career .careerCard_slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
