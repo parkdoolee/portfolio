@@ -342,7 +342,7 @@ main .project {
   overflow: hidden;
 }
 
-main .project .project_title {
+/* main .project .project_title {
   position: fixed;
   top: 50px;
   left: 50%;
@@ -354,7 +354,7 @@ main .project .project_title {
   text-align: center;
   pointer-events: none;
   opacity: 0;
-}
+} */
 
 main .project .project_title.visible {
   opacity: 1;
@@ -383,7 +383,7 @@ main .project .gallery {
   gap: 4px;
   grid-template-columns: 6fr 6fr 4fr;
   grid-template-rows: 1fr 1fr;
-  transform-origin: 0 0;
+  transform-origin: 50% 50%;
 }
 
 /* 갤러리 아이템 */
@@ -428,10 +428,15 @@ main .project .gallery__item[data-index="4"] {
 /* 프로젝트 상세 섹션 */
 main .project .project-detail {
   min-height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0a0a0a;
+  background-color: transparent;
+  z-index: 10;
   padding: 100px 5rem;
 }
 

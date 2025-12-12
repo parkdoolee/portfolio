@@ -291,128 +291,202 @@ if (multiSection) {
 }
 
 // ============================================
-// PROJECT 섹션: 그리드 전체 확대 → 설명 → 복귀 반복
+// PROJECT 섹션: 그리드 전체 확대 → 상세 페이지 확장 → 축소 복귀 (데모 완벽 구현)
 // ============================================
 const projectSection = document.querySelector(".project");
 if (projectSection) {
+  // HTML 구조: .gallery-wrap (Pin 대상) 안에 .gallery
   const galleryWrap = document.querySelector(".gallery-wrap");
   const gallery = document.querySelector(".gallery");
   const items = document.querySelectorAll(".gallery__item");
   const details = document.querySelectorAll(".project-detail");
   const panelCount = items.length;
 
-  // 각 패널이 화면을 꽉 채우기 위한 scale과 translate 계산
+  let panelTransforms = [];
+
+  // 각 패널이 화면을 꽉 채우기 위한 scale과 translate 계산 함수
   const getTransformForPanel = (index) => {
+    // 계산 전에 갤러리 상태를 일시적으로 리셋하여 정확한 값을 측정합니다.
+    const resetTransform = gsap.set(gallery, { scale: 1, x: 0, y: 0 });
+
     const item = items[index];
-    const galleryRect = gallery.getBoundingClientRect();
     const itemRect = item.getBoundingClientRect();
 
-    // 패널이 화면을 꽉 채우려면 얼마나 확대해야 하는지
     const scaleX = window.innerWidth / itemRect.width;
     const scaleY = window.innerHeight / itemRect.height;
     const scale = Math.min(scaleX, scaleY);
 
-    // 갤러리 중심 기준으로 해당 패널을 화면 중앙으로 이동
-    const galleryCenterX = galleryRect.left + galleryRect.width / 2;
-    const galleryCenterY = galleryRect.top + galleryRect.height / 2;
-    const itemCenterX = itemRect.left + itemRect.width / 2;
-    const itemCenterY = itemRect.top + itemRect.height / 2;
+    const translateX =
+      window.innerWidth / 2 - (itemRect.left + itemRect.width / 2);
+    const translateY =
+      window.innerHeight / 2 - (itemRect.top + itemRect.height / 2);
 
-    // 패널 중심을 화면 중앙으로 이동시키기 위한 offset
-    const offsetX = (window.innerWidth / 2 - itemCenterX) * (1 / scale);
-    const offsetY = (window.innerHeight / 2 - itemCenterY) * (1 / scale);
-
-    return { scale, offsetX, offsetY };
+    // 계산 후 원래 상태로 복원
+    resetTransform.revert();
+    return { scale, translateX, translateY };
   };
 
-  // 마스터 타임라인 생성
+  // 상세 페이지의 높이 (스크롤되어야 할 길이)를 계산하는 함수
+  const getDetailScrollLength = (detailElement) => {
+    // 뷰포트 높이(100vh)를 초과하는 상세 페이지의 높이를 가져옵니다.
+    // 핀 해제 후 다음 내용이 스크롤되도록 뷰포트 높이만큼 추가합니다.
+    const detailHeight = detailElement.offsetHeight;
+    return detailHeight > window.innerHeight
+      ? detailHeight
+      : window.innerHeight;
+  };
+
   const createAnimation = () => {
-    // 기존 ScrollTrigger 제거
-    ScrollTrigger.getAll().forEach((st) => {
-      if (
-        st.vars.trigger === galleryWrap ||
-        st.vars.trigger === projectSection
-      ) {
-        st.kill();
-      }
+    // 1. 기존 ScrollTrigger 모두 제거
+    ScrollTrigger.getAll().forEach((st) => st.kill());
+
+    // 2. 초기 상태 설정
+    gsap.set(gallery, { scale: 1, x: 0, y: 0, transformOrigin: "50% 50%" });
+    gsap.set(details, {
+      opacity: 0,
+      pointerEvents: "none",
+      zIndex: 1,
+      position: "absolute",
+      top: 0,
+    });
+    gsap.set(".project_title", { opacity: 0 });
+
+    const scrollUnit = 500; // 1 타임라인 시간 단위 = 500px 스크롤 (확대/축소에 사용)
+    const detailScrollUnit = 1000; // 상세 페이지 스크롤 구간 길이 (임시)
+
+    let cumulativeScrollLength = 0; // 전체 섹션의 누적 스크롤 길이
+
+    // --- 3. 개별 패널 애니메이션을 위한 마스터 타임라인 구성 ---
+    // 마스터 타임라인은 Pin을 직접 연결하지 않고, 스크롤 위치를 기록하는 데 사용됩니다.
+    // Pin은 아래 4번에서 별도로 설정합니다.
+
+    // 각 패널의 애니메이션 타임라인을 담을 컨테이너
+    const masterTl = gsap.timeline({
+      defaults: { ease: "none" },
     });
 
-    // 갤러리 초기화
-    gsap.set(gallery, { scale: 1, x: 0, y: 0 });
+    panelTransforms.forEach((t, i) => {
+      const detailElement = details[i];
+      const detailHeight = getDetailScrollLength(detailElement);
 
-    // 첫 번째: 갤러리 확대 애니메이션 (패널 0번으로)
-    const transform0 = getTransformForPanel(0);
+      // --- 1. 확대 애니메이션 (3단계 = 3.0 duration) ---
+      const tlStart = masterTl.duration();
 
-    ScrollTrigger.create({
-      trigger: galleryWrap,
-      start: "top top",
-      end: "+=100%",
-      pin: true,
-      scrub: 1,
-      onUpdate: (self) => {
-        const progress = self.progress;
-        const t = getTransformForPanel(0);
-        gsap.set(gallery, {
-          scale: 1 + (t.scale - 1) * progress,
-          x: t.offsetX * progress,
-          y: t.offsetY * progress,
-        });
-      },
-    });
+      // 1-1. 초기(0%) → 30% 확대 (Duration: 1.0)
+      masterTl.to(
+        gallery,
+        {
+          scale: 1 + (t.scale - 1) * 0.3,
+          x: t.translateX * 0.3,
+          y: t.translateY * 0.3,
+          duration: 1,
+        },
+        tlStart
+      );
 
-    // 이후 패널들: 설명 → 다시 갤러리 확대 반복
-    details.forEach((detail, i) => {
-      // 설명 섹션은 그냥 스크롤
-      // 다음 패널 확대 (마지막이 아닌 경우)
+      // 1-2. 30% → 60% 확대 (Duration: 1.0)
+      masterTl.to(gallery, {
+        scale: 1 + (t.scale - 1) * 0.6,
+        x: t.translateX * 0.6,
+        y: t.translateY * 0.6,
+        duration: 1,
+      });
+
+      // 1-3. 60% → 100% 확대 (화면 꽉 참) (Duration: 1.0)
+      masterTl.to(gallery, {
+        scale: t.scale,
+        x: t.translateX,
+        y: t.translateY,
+        duration: 1,
+      });
+
+      // --- 2. 상세 설명 노출 및 스크롤 (Pin 확장) 구간 (Duration: detailHeight/scrollUnit) ---
+      const detailDuration = detailHeight / scrollUnit; // 상세 설명에 필요한 타임라인 시간
+
+      // 상세 설명 노출 시작 (100% 확대가 완료되는 시점에 동시 시작)
+      masterTl.to(
+        detailElement,
+        {
+          opacity: 1,
+          zIndex: 10,
+          pointerEvents: "auto",
+          duration: 0.1, // 빠르게 노출
+        },
+        "<0"
+      );
+
+      // 상세 설명 스크롤 애니메이션 (실제 갤러리 애니메이션은 멈추고 상세설명만 움직여야 함)
+      // 이 구간에서 갤러리는 100% 상태를 유지합니다.
+      masterTl.to(detailElement, {
+        y: -detailHeight, // 상세 설명을 화면 높이만큼 위로 스크롤
+        duration: detailDuration, // 상세 설명 스크롤 시간에 맞춤
+      });
+
+      // --- 3. 축소 복귀 및 다음 패널 준비 (Duration: 1.0) ---
+
+      // 3-1. 상세 설명 숨김 및 위치 리셋 (Duration: 0.1)
+      masterTl.to(detailElement, {
+        opacity: 0,
+        zIndex: 1,
+        pointerEvents: "none",
+        y: 0, // 위치 리셋
+        duration: 0.1,
+      });
+
+      // 3-2. 갤러리 축소 (Duration: 0.9)
       if (i < panelCount - 1) {
-        // 다음 갤러리 확대를 위한 핀
-        ScrollTrigger.create({
-          trigger: detail,
-          start: "bottom bottom",
-          end: "+=100%",
-          pin: galleryWrap,
-          pinSpacing: false,
-          scrub: 1,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            const nextIndex = i + 1;
-            const t = getTransformForPanel(nextIndex);
-
-            // 이전 상태에서 다음 상태로 전환
-            // progress 0: 원래 크기, progress 1: 다음 패널 확대
-            if (progress < 0.5) {
-              // 축소 단계
-              const shrinkProgress = progress * 2;
-              const prevT = getTransformForPanel(i);
-              gsap.set(gallery, {
-                scale: prevT.scale - (prevT.scale - 1) * shrinkProgress,
-                x: prevT.offsetX * (1 - shrinkProgress),
-                y: prevT.offsetY * (1 - shrinkProgress),
-              });
-            } else {
-              // 확대 단계
-              const growProgress = (progress - 0.5) * 2;
-              gsap.set(gallery, {
-                scale: 1 + (t.scale - 1) * growProgress,
-                x: t.offsetX * growProgress,
-                y: t.offsetY * growProgress,
-              });
-            }
-          },
+        masterTl.to(gallery, {
+          scale: 1,
+          x: 0,
+          y: 0,
+          duration: 0.9,
         });
       }
     });
+
+    // 4. [최종 Pin 설정] 전체 스크롤 길이를 타임라인의 총 지속 시간에 맞춰 설정
+    const finalDuration = masterTl.duration();
+    const endScrollPosition = finalDuration * scrollUnit;
+
+    // 최종 높이 설정
+    gsap.set(projectSection, {
+      height: endScrollPosition + window.innerHeight,
+    });
+
+    // 마스터 타임라인과 Pin 연결
+    ScrollTrigger.create({
+      trigger: projectSection,
+      start: "top top",
+      end: `bottom-=${window.innerHeight} top`,
+      pin: galleryWrap,
+      pinSpacing: false,
+      scrub: 1,
+      animation: masterTl, // 마스터 타임라인을 이 ScrollTrigger에 연결
+    });
+
+    // 5. 최종적으로 ScrollTrigger 갱신
+    ScrollTrigger.refresh();
   };
 
-  // 초기 실행
-  createAnimation();
-
-  // 리사이즈 대응
+  // 초기 실행 및 리사이즈 대응
   let resizeTimer;
+  const init = () => {
+    gsap.set(gallery, { transformOrigin: "50% 50%" });
+
+    // 1. 모든 패널의 변환 값을 먼저 계산하고 저장합니다.
+    panelTransforms = Array.from(items).map((_, i) => getTransformForPanel(i));
+
+    // 2. 애니메이션 생성
+    createAnimation();
+  };
+
+  init();
+
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(() => {
-      createAnimation();
+      gsap.set(gallery, { clearProps: "all" });
+      init();
     }, 250);
   });
 }
