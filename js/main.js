@@ -14,9 +14,8 @@ window.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(raf);
   }
   requestAnimationFrame(raf);
-  // ============================================
+
   // 모든 줄 요소 수집 (기존 유지)
-  // ============================================
   const topLines = document.querySelectorAll(".top p");
   const bottomLines = document.querySelectorAll(".bottom p");
   const koLines = document.querySelectorAll("[data-scroll-fade] p");
@@ -31,9 +30,8 @@ window.addEventListener("DOMContentLoaded", () => {
     backgroundPosition: "100% 0",
   });
 
-  // ============================================
+
   // 텍스트 나타남 애니메이션 (기존 유지)
-  // ============================================
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: ".identity",
@@ -62,9 +60,7 @@ window.addEventListener("DOMContentLoaded", () => {
     );
   });
 
-  // ============================================
   // 텍스트 영역: 패럴랙스 (빠르게 위로) (기존 유지)
-  // ============================================
   gsap.to(".identity_right", {
     y: -350,
     ease: "expo.out",
@@ -76,9 +72,7 @@ window.addEventListener("DOMContentLoaded", () => {
     },
   });
 
-  // ============================================
   // 이미지 영역: 스크롤 패럴랙스 (밑점 95px 위치에서 시작) (기존 유지)
-  // ============================================
   const imgElement = document.querySelector(".identity_left img");
 
   // 시작 위치: 이미지가 컨테이너 아래쪽에서 시작하도록 충분히 큰 음수 값 설정
@@ -105,6 +99,8 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   );
 });
+
+
 
 // ============================================
 // multiDesigner 섹션 애니메이션

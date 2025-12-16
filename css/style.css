@@ -57,21 +57,21 @@ main .intro .overlay {
   left: 0;
   top: 0;
   width: 100%;
-  /* 항상 위에 깔려 있지만, 마스크 때문에 기본적으로는 거의 안 보이는 상태 */
   opacity: 1;
-  /* 오른쪽에서 왼쪽으로 지나가는 빛 마스크 */
-  -webkit-mask-image: linear-gradient(to left,
-      rgba(0, 0, 0, 0) 0%,
-      /* 오른쪽 쪽: 처음엔 안 보임 */
-      rgba(0, 0, 0, 0) 40%,
-      rgba(0, 0, 0, 1) 60%,
-      /* 중앙 쪽: 이 부분이 지나가며 보이게 됨 */
-      rgba(0, 0, 0, 1) 100%);
+  -webkit-mask-image: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0) 40%,
+    rgba(0, 0, 0, 1) 60%,
+    rgba(0, 0, 0, 1) 100%
+  );
   -webkit-mask-size: 200% 100%;
-  /* 가로 2배: 오른쪽 바깥에서 시작 */
   -webkit-mask-position: 100% 0;
-  /* 시작 위치: 오른쪽 끝 */
   transition: -webkit-mask-position 4s cubic-bezier(0.18, 0.34, 0.15, 1);
+}
+
+main .intro .glass_wrap:hover .overlay {
+  -webkit-mask-position: 0% 0;
 }
 
 /* 반사 레이어 */
