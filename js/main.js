@@ -496,22 +496,24 @@ if (careerSection) {
   // 3. 패널 전환: 각 패널을 100vh씩 위로 끌어올림
   panels.forEach((panel, i) => {
     const title = panelTitles[i];
+    const subtitle = panel.querySelector('.page_subtitle');
+    const slider = panel.querySelector('.career_slider');
+    const sliderImages = slider ? slider.querySelectorAll('img') : [];
 
+    // 패널 전환 (마지막 패널 제외)
     if (i < numPanels - 1) {
-      // 마지막 패널을 제외하고, 다음 패널로 이동
       careerTl.to(
         panelWrap,
         {
-          y: -panelHeight * (i + 1), // -100vh, -200vh, -300vh, -400vh
-          duration: 1, // 각 전환에 필요한 타임라인 진행 속도
+          y: -panelHeight * (i + 1),
+          duration: 1,
           ease: "power2.inOut",
         },
         i
-      ); // 각 전환 시작 지점을 타임라인 인덱스로 지정
+      );
     }
 
-    // 4. 타이틀 애니메이션 (전환 구간 중앙에서 나타나고 사라짐)
-    // 현재 전환이 시작될 때 (i) 나타나서, 다음 전환 시작 직전(i + 0.9)에 사라지도록 설정
+    // 4. 타이틀 애니메이션
     careerTl
       .fromTo(
         title,
@@ -521,10 +523,10 @@ if (careerSection) {
           scale: 1,
           opacity: 1,
           filter: "blur(0px)",
-          duration: 0.4,
+          duration: 0.3,
           ease: "power2.out",
         },
-        i // 해당 전환의 초반에 나타남
+        i
       )
       .to(
         title,
@@ -533,13 +535,61 @@ if (careerSection) {
           scale: 0.9,
           opacity: 0,
           filter: "blur(10px)",
-          duration: 0.4,
+          duration: 0.2,
           ease: "power2.in",
         },
-        i + 0.6 // 해당 전환의 후반에 사라짐 (0.6 ~ 0.8 사이)
+        i + 0.15
       );
-  });
 
+    // 5. 서브타이틀 애니메이션
+    if (subtitle) {
+      careerTl
+        .fromTo(
+          subtitle,
+          { y: 50, scale: 0.9, opacity: 0, filter: "blur(10px)" },
+          {
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 0.2,
+            ease: "power2.out",
+          },
+          i + 0.2
+        )
+        .to(
+          subtitle,
+          {
+            y: -50,
+            scale: 0.9,
+            opacity: 0,
+            filter: "blur(10px)",
+            duration: 0.2,
+            ease: "power2.in",
+          },
+          i + 0.35
+        );
+    }
+
+    // 6. 이미지 슬라이더 - 패널 시작과 동시에 루핑
+    if (sliderImages.length > 0) {
+      // 전체 섹션 동안 반복되는 타임라인 생성
+      const slideCount = sliderImages.length;
+      const slideDuration = 0.05; // 각 이미지 표시 시간
+      const totalSlideDuration = slideCount * slideDuration;
+      const loopCount = Math.ceil(1 / totalSlideDuration); // 1초 동안 몇 번 반복할지
+
+      for (let loop = 0; loop < loopCount; loop++) {
+        sliderImages.forEach((img, imgIndex) => {
+          const imgTime = i + loop * totalSlideDuration + imgIndex * slideDuration;
+          careerTl
+            .to(img, { opacity: 1, duration: 0.02 }, imgTime)
+            .to(img, { opacity: 0, duration: 0.02 }, imgTime + slideDuration - 0.02);
+        });
+      }
+    }
+  });
+  
   // 5. 창 크기 변경 시 ScrollTrigger 및 높이 재계산
   let resizeTimer;
   window.addEventListener("resize", () => {
