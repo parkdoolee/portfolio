@@ -287,43 +287,46 @@ if (multiSection) {
   );
 }
 
-// ROLLING TEXT ANIMATION (multiDesigner)
 
-// SplitText 라이브러리가 필요합니다
+// MULTI TITLE ANIMATION (커리어 섹션과 동일한 효과)
 if (typeof SplitText !== 'undefined') {
-  const rollLines = document.querySelectorAll(".roll_line");
-
-  // 각 라인의 글자 분리
-  const splitRolls = Array.from(rollLines).map(line =>
-    new SplitText(line, { type: "chars", charsClass: "roll_char" })
-  );
-
-  // 3D 설정
-  const width = window.innerWidth;
-  const depth = -width / 8;
-  const transformOrigin = `50% 50% ${depth}px`;
-
-  gsap.set(rollLines, { perspective: 700, transformStyle: "preserve-3d" });
-
-  // 타임라인 애니메이션
-  const animTime = 2.2;
-  const rollTl = gsap.timeline({ repeat: -1, repeatDelay: -.4 });
-
-  // 각 라인 애니메이션
-  splitRolls.forEach((split, index) => {
-    rollTl.fromTo(
-      split.chars,
-      { rotationX: -90 },
-      {
-        rotationX: 90,
-        stagger: 0.08,
-        duration: animTime,
-        ease: "none",
-        transformOrigin
-      },
-      index * 1
-    );
-  });
+  const multiTitle = document.querySelector(".multi_title");
+  
+  if (multiTitle) {
+    // 타이틀 텍스트 분리
+    const splitTitle = new SplitText(multiTitle, { 
+      type: "chars,words,lines", 
+      linesClass: "clip_text" 
+    });
+    
+    // 초기 상태: 모든 글자 숨김
+    gsap.set(splitTitle.chars, { autoAlpha: 0 });
+    gsap.set(multiTitle, { opacity: 1 }); // 👈 타이틀 자체는 보이게
+    
+    // 👉 타이틀 자체를 트리거로 사용
+    ScrollTrigger.create({
+      trigger: multiTitle, // 👈 .multiDesigner가 아닌 타이틀 자체
+      start: "top 80%", // 👈 타이틀이 화면 하단 80% 지점에 도달할 때
+      once: true,
+      onEnter: () => {
+        // 랜덤하게 글자 나타남
+        gsap.fromTo(
+          splitTitle.chars,
+          { autoAlpha: 0, yPercent: 150 },
+          {
+            autoAlpha: 1,
+            yPercent: 0,
+            duration: 0.8,
+            ease: "power2",
+            stagger: {
+              each: 0.02,
+              from: "random"
+            }
+          }
+        );
+      }
+    });
+  }
 }
 
 // ============================================

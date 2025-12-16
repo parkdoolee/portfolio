@@ -234,30 +234,23 @@ main .multiDesigner .multi_title_wrapper {
 }
 
 main .multiDesigner .multi_title {
-  position: relative;
-  width: 100%;
-  height: 200px;
-  perspective: 1000px;
-}
-
-main .multiDesigner .roll_line {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  line-height: 1;
-  margin: 0;
   font-size: 140px;
   font-weight: 600;
   color: #fff;
   letter-spacing: -0.02em;
   white-space: nowrap;
   text-align: center;
-  transform-style: preserve-3d;
+  margin: 0;
+  line-height: 1;
+  opacity: 0;
 }
 
-main .multiDesigner .roll_line div {
-  backface-visibility: hidden;
+main .multiDesigner .multi_title .clip_text {
+  overflow: hidden;
+}
+
+main .multiDesigner .multi_title * {
+  will-change: transform;
 }
 
 /* 반응형 */
