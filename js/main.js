@@ -287,6 +287,45 @@ if (multiSection) {
   );
 }
 
+// ROLLING TEXT ANIMATION (multiDesigner)
+
+// SplitText 라이브러리가 필요합니다
+if (typeof SplitText !== 'undefined') {
+  const rollLines = document.querySelectorAll(".roll_line");
+
+  // 각 라인의 글자 분리
+  const splitRolls = Array.from(rollLines).map(line =>
+    new SplitText(line, { type: "chars", charsClass: "roll_char" })
+  );
+
+  // 3D 설정
+  const width = window.innerWidth;
+  const depth = -width / 8;
+  const transformOrigin = `50% 50% ${depth}px`;
+
+  gsap.set(rollLines, { perspective: 700, transformStyle: "preserve-3d" });
+
+  // 타임라인 애니메이션
+  const animTime = 2.2;
+  const rollTl = gsap.timeline({ repeat: -1, repeatDelay: -.4 });
+
+  // 각 라인 애니메이션
+  splitRolls.forEach((split, index) => {
+    rollTl.fromTo(
+      split.chars,
+      { rotationX: -90 },
+      {
+        rotationX: 90,
+        stagger: 0.08,
+        duration: animTime,
+        ease: "none",
+        transformOrigin
+      },
+      index * 1
+    );
+  });
+}
+
 // ============================================
 // PROJECT 섹션: 갤러리 확대 → 상세 페이지 전환 → 스크롤 → 축소 복귀
 // ============================================
@@ -500,13 +539,13 @@ if (careerSection) {
     // 이미지 슬라이더 - 각 패널에서 독립적으로 무한 루핑
     if (sliderImages.length > 0) {
       const imageTl = gsap.timeline({ repeat: -1 });
-      
+
       sliderImages.forEach((img, imgIndex) => {
         imageTl
           .to(img, { opacity: 1, duration: 0 }, imgIndex * 1)
           .to(img, { opacity: 0, duration: 0 }, (imgIndex + 1) * 1 - 0.01);
       });
-      
+
       imageTl.play();
     }
   });
