@@ -628,6 +628,16 @@ main .career .careerPage .page_subtitle {
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
+/* 글자 클립 효과를 위한 클래스 */
+main .career .careerPage .clip_text {
+  overflow: hidden;
+}
+
+main .career .careerPage .page_title *,
+main .career .careerPage .page_subtitle * {
+  will-change: transform;
+}
+
 main .career .careerPage .career_slider {
   position: absolute;
   top: 0;

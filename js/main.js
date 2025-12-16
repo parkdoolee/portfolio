@@ -644,3 +644,75 @@ if (careerSection) {
     }, 250);
   });
 }
+
+
+// CAREER TEXT ANIMATION
+if (typeof SplitText !== 'undefined') {
+  const careerTitles = gsap.utils.toArray(".page_title");
+  const careerSubtitles = gsap.utils.toArray(".page_subtitle");
+  
+  // 👇 여기서 linesClass: "clip_text"가 자동으로 HTML에 클래스 추가해줌
+  const splitTitles = careerTitles.map(title => 
+    new SplitText(title, { type: "chars,words,lines", linesClass: "clip_text" })
+  );
+  
+  const splitSubtitles = careerSubtitles.map(subtitle => 
+    new SplitText(subtitle, { type: "chars,words,lines", linesClass: "clip_text" })
+  );
+  
+  // 초기 상태: 모든 글자 숨기기
+  careerTitles.forEach(title => gsap.set(title, { autoAlpha: 0 }));
+  careerSubtitles.forEach(subtitle => gsap.set(subtitle, { autoAlpha: 0 }));
+  
+  // 각 careerPage에 ScrollTrigger 적용
+  gsap.utils.toArray(".careerPage").forEach((page, index) => {
+    const titleChars = splitTitles[index].chars;
+    const subtitleChars = splitSubtitles[index].chars;
+    
+    ScrollTrigger.create({
+      trigger: page,
+      start: "top 80%",
+      once: true,
+      onEnter: () => {
+        gsap.set(careerTitles[index], { autoAlpha: 1 });
+        
+        gsap.fromTo(titleChars, 
+          { 
+            autoAlpha: 0, 
+            yPercent: 150 
+          },
+          {
+            autoAlpha: 1,
+            yPercent: 0,
+            duration: 1,
+            ease: "power2",
+            stagger: {
+              each: 0.02,
+              from: "random"
+            }
+          }
+        );
+        
+        gsap.set(careerSubtitles[index], { autoAlpha: 1 });
+        
+        gsap.fromTo(subtitleChars, 
+          { 
+            autoAlpha: 0, 
+            yPercent: 150 
+          },
+          {
+            autoAlpha: 1,
+            yPercent: 0,
+            duration: 1,
+            ease: "power2",
+            stagger: {
+              each: 0.02,
+              from: "random"
+            },
+            delay: 0.3
+          }
+        );
+      }
+    });
+  });
+}
