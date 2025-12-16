@@ -589,13 +589,12 @@ main .career .careerPage .page_subtitle {
 
 main .career .careerPage .career_slider {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80%;
-  height: 70%;
+  top: 0;
+  left: 0;
+  width: 100vw; /* 100%에서 100vw로 변경 */
+  height: 100vh; /* 100%에서 100vh로 변경 */
   opacity: 1;
-  z-index: 1;
+  z-index: 0; /* 1에서 0으로 변경 (배경이므로) */
 }
 
 main .career .careerPage .career_slider img {
@@ -604,7 +603,8 @@ main .career .careerPage .career_slider img {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* 이미지를 화면에 꽉 채우면서 비율 유지 */
+  object-position: center; /* 중앙 기준으로 자르기 */
   opacity: 0;
 }
 

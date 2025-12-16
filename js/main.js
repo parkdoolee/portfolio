@@ -485,35 +485,43 @@ if (careerSection) {
   const careerTl = gsap.timeline({
     scrollTrigger: {
       trigger: careerSection,
-      pin: true, // 섹션 전체를 뷰포트에 고정
+      pin: true,
       scrub: 1,
       start: "top top",
-      end: `+=${(numPanels - 1) * panelHeight}`, // 구체적인 스크롤 길이 지정
-      snap: 1 / (numPanels - 1),
+      end: `+=${numPanels * 2 * panelHeight}`, // 각 패널당 2배 길이
+      snap: {
+        snapTo: 1 / (numPanels * 2 - 1), // 더 세밀한 스냅
+        duration: 0.5,
+      },
     },
   });
 
-  // 3. 패널 전환: 각 패널을 100vh씩 위로 끌어올림
+  // 각 패널마다 독립적인 이미지 슬라이더 애니메이션 생성
   panels.forEach((panel, i) => {
-    const title = panelTitles[i];
-    const subtitle = panel.querySelector('.page_subtitle');
     const slider = panel.querySelector('.career_slider');
     const sliderImages = slider ? slider.querySelectorAll('img') : [];
 
-    // 패널 전환 (마지막 패널 제외)
-    if (i < numPanels - 1) {
-      careerTl.to(
-        panelWrap,
-        {
-          y: -panelHeight * (i + 1),
-          duration: 1,
-          ease: "power2.inOut",
-        },
-        i
-      );
+    // 이미지 슬라이더 - 각 패널에서 독립적으로 무한 루핑
+    if (sliderImages.length > 0) {
+      const imageTl = gsap.timeline({ repeat: -1 });
+      
+      sliderImages.forEach((img, imgIndex) => {
+        imageTl
+          .to(img, { opacity: 1, duration: 0 }, imgIndex * 1)
+          .to(img, { opacity: 0, duration: 0 }, (imgIndex + 1) * 1 - 0.01);
+      });
+      
+      imageTl.play();
     }
+  });
 
-    // 4. 타이틀 애니메이션
+  // 3. 패널 전환 및 텍스트 애니메이션
+  panels.forEach((panel, i) => {
+    const title = panelTitles[i];
+    const subtitle = panel.querySelector('.page_subtitle');
+    const startTime = i * 2; // 각 패널은 2 duration 차지
+
+    // 4. 타이틀 애니메이션 (0.0 ~ 0.8)
     careerTl
       .fromTo(
         title,
@@ -526,7 +534,7 @@ if (careerSection) {
           duration: 0.3,
           ease: "power2.out",
         },
-        i
+        startTime
       )
       .to(
         title,
@@ -535,13 +543,13 @@ if (careerSection) {
           scale: 0.9,
           opacity: 0,
           filter: "blur(10px)",
-          duration: 0.2,
+          duration: 0.3,
           ease: "power2.in",
         },
-        i + 0.15
+        startTime + 0.5
       );
 
-    // 5. 서브타이틀 애니메이션
+    // 5. 서브타이틀 애니메이션 (0.8 ~ 1.8)
     if (subtitle) {
       careerTl
         .fromTo(
@@ -552,10 +560,10 @@ if (careerSection) {
             scale: 1,
             opacity: 1,
             filter: "blur(0px)",
-            duration: 0.2,
+            duration: 0.3,
             ease: "power2.out",
           },
-          i + 0.2
+          startTime + 0.8
         )
         .to(
           subtitle,
@@ -564,33 +572,28 @@ if (careerSection) {
             scale: 0.9,
             opacity: 0,
             filter: "blur(10px)",
-            duration: 0.2,
+            duration: 0.3,
             ease: "power2.in",
           },
-          i + 0.35
+          startTime + 1.5
         );
     }
 
-    // 6. 이미지 슬라이더 - 패널 시작과 동시에 루핑
-    if (sliderImages.length > 0) {
-      // 전체 섹션 동안 반복되는 타임라인 생성
-      const slideCount = sliderImages.length;
-      const slideDuration = 0.05; // 각 이미지 표시 시간
-      const totalSlideDuration = slideCount * slideDuration;
-      const loopCount = Math.ceil(1 / totalSlideDuration); // 1초 동안 몇 번 반복할지
-
-      for (let loop = 0; loop < loopCount; loop++) {
-        sliderImages.forEach((img, imgIndex) => {
-          const imgTime = i + loop * totalSlideDuration + imgIndex * slideDuration;
-          careerTl
-            .to(img, { opacity: 1, duration: 0.02 }, imgTime)
-            .to(img, { opacity: 0, duration: 0.02 }, imgTime + slideDuration - 0.02);
-        });
-      }
+    // 6. 패널 전환 (1.8 ~ 2.0)
+    if (i < numPanels - 1) {
+      careerTl.to(
+        panelWrap,
+        {
+          y: -panelHeight * (i + 1),
+          duration: 0.5,
+          ease: "power2.inOut",
+        },
+        startTime + 1.8
+      );
     }
   });
-  
-  // 5. 창 크기 변경 시 ScrollTrigger 및 높이 재계산
+
+  // 6. 창 크기 변경 시 ScrollTrigger 및 높이 재계산
   let resizeTimer;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
