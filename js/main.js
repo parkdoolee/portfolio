@@ -184,8 +184,9 @@ if (multiSection) {
     {
       width: "100vw",
       height: "100vh",
+      transformOrigin: "center bottom",
       duration: 2.5, // 길게 설정해서 끝까지 천천히 확대
-      ease: "none", // 일정한 속도로
+      ease: "none",
     },
     0.9
   );
