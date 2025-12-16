@@ -498,221 +498,155 @@ if (projectSection) {
   });
 }
 
+
 // ============================================
-// CAREER 섹션: 세로 슬라이드 + 스냅핑 전환
+// CAREER 섹션 (swipe-slider 방식)
 // ============================================
 const careerSection = document.querySelector(".career");
 if (careerSection) {
   const panels = document.querySelectorAll(".careerPage");
-  const panelTitles = document.querySelectorAll(".page_title");
   const panelWrap = document.querySelector(".career_panels");
+  const panelSubtitles = document.querySelectorAll(".page_subtitle");
   const numPanels = panels.length;
   const panelHeight = window.innerHeight;
 
-  // 1. 전체 career 섹션 높이 설정
-  // 5개 패널을 순차적으로 보여주기 위해 총 높이를 설정합니다.
-  // (패널 수 * 뷰포트 높이)
-  // gsap.set(careerSection, {
-  //   height: (numPanels - 1) * panelHeight + panelHeight,
-  // });
+  // SplitText로 서브타이틀만 분리
+  let splitSubtitles = [];
+  
+  if (typeof SplitText !== 'undefined') {
+    splitSubtitles = Array.from(panelSubtitles).map(subtitle => 
+      new SplitText(subtitle, { type: "chars,words,lines", linesClass: "clip_text" })
+    );
+  }
 
-  // 2. 메인 전환 애니메이션 (Vertical Translation)
-  const careerTl = gsap.timeline({
-    scrollTrigger: {
-      trigger: careerSection,
-      pin: true,
-      scrub: 1,
-      start: "top top",
-      end: `+=${numPanels * 2 * panelHeight}`, // 각 패널당 2배 길이
-      snap: {
-        snapTo: 1 / (numPanels * 2 - 1), // 더 세밀한 스냅
-        duration: 0.5,
-      },
-    },
-  });
-
-  // 각 패널마다 독립적인 이미지 슬라이더 애니메이션 생성
+  // 이미지 슬라이더
   panels.forEach((panel, i) => {
     const slider = panel.querySelector('.career_slider');
     const sliderImages = slider ? slider.querySelectorAll('img') : [];
 
-    // 이미지 슬라이더 - 각 패널에서 독립적으로 무한 루핑
     if (sliderImages.length > 0) {
       const imageTl = gsap.timeline({ repeat: -1 });
-
+      
       sliderImages.forEach((img, imgIndex) => {
         imageTl
           .to(img, { opacity: 1, duration: 0 }, imgIndex * 1)
           .to(img, { opacity: 0, duration: 0 }, (imgIndex + 1) * 1 - 0.01);
       });
-
+      
       imageTl.play();
     }
   });
 
-  // 3. 패널 전환 및 텍스트 애니메이션
-  panels.forEach((panel, i) => {
-    const title = panelTitles[i];
-    const subtitle = panel.querySelector('.page_subtitle');
-    const startTime = i * 2; // 각 패널은 2 duration 차지
+  // 패널 전환 애니메이션
+  let currentIndex = -1;
+  let animating = false;
+  let sectionPinned = false;
 
-    // 4. 타이틀 애니메이션 (0.0 ~ 0.8)
-    careerTl
-      .fromTo(
-        title,
-        { y: 0, scale: 0.9, opacity: 0, filter: "blur(10px)" },
-        {
-          y: 0,
-          scale: 1,
-          opacity: 1,
-          filter: "blur(0px)",
-          duration: 0.3,
-          ease: "power2.out",
-        },
-        startTime
-      )
-      .to(
-        title,
-        {
-          y: -50,
-          scale: 0.9,
-          opacity: 0,
-          filter: "blur(10px)",
-          duration: 0.3,
-          ease: "power2.in",
-        },
-        startTime + 0.5
-      );
-
-    // 5. 서브타이틀 애니메이션 (0.8 ~ 1.8)
-    if (subtitle) {
-      careerTl
-        .fromTo(
-          subtitle,
-          { y: 50, scale: 0.9, opacity: 0, filter: "blur(10px)" },
-          {
-            y: 0,
-            scale: 1,
-            opacity: 1,
-            filter: "blur(0px)",
-            duration: 0.3,
-            ease: "power2.out",
-          },
-          startTime + 0.8
-        )
-        .to(
-          subtitle,
-          {
-            y: -50,
-            scale: 0.9,
-            opacity: 0,
-            filter: "blur(10px)",
-            duration: 0.3,
-            ease: "power2.in",
-          },
-          startTime + 1.5
-        );
-    }
-
-    // 6. 패널 전환 (1.8 ~ 2.0)
-    if (i < numPanels - 1) {
-      careerTl.to(
-        panelWrap,
-        {
-          y: -panelHeight * (i + 1),
-          duration: 0.5,
-          ease: "power2.inOut",
-        },
-        startTime + 1.8
-      );
-    }
-  });
-
-  // 6. 창 크기 변경 시 ScrollTrigger 및 높이 재계산
-  let resizeTimer;
-  window.addEventListener("resize", () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      ScrollTrigger.getAll().forEach((st) => {
-        if (st.trigger === careerSection) {
-          st.kill();
-        }
-      });
-      gsap.set(careerSection, { clearProps: "height" });
-      gsap.set(panelWrap, { clearProps: "y" });
-      ScrollTrigger.refresh();
-    }, 250);
-  });
-}
-
-
-// CAREER TEXT ANIMATION
-if (typeof SplitText !== 'undefined') {
-  const careerTitles = gsap.utils.toArray(".page_title");
-  const careerSubtitles = gsap.utils.toArray(".page_subtitle");
-  
-  // 👇 여기서 linesClass: "clip_text"가 자동으로 HTML에 클래스 추가해줌
-  const splitTitles = careerTitles.map(title => 
-    new SplitText(title, { type: "chars,words,lines", linesClass: "clip_text" })
-  );
-  
-  const splitSubtitles = careerSubtitles.map(subtitle => 
-    new SplitText(subtitle, { type: "chars,words,lines", linesClass: "clip_text" })
-  );
-  
-  // 초기 상태: 모든 글자 숨기기
-  careerTitles.forEach(title => gsap.set(title, { autoAlpha: 0 }));
-  careerSubtitles.forEach(subtitle => gsap.set(subtitle, { autoAlpha: 0 }));
-  
-  // 각 careerPage에 ScrollTrigger 적용
-  gsap.utils.toArray(".careerPage").forEach((page, index) => {
-    const titleChars = splitTitles[index].chars;
-    const subtitleChars = splitSubtitles[index].chars;
+  function gotoPanel(index, direction) {
+    if (index < 0 || index >= numPanels || animating) return;
     
-    ScrollTrigger.create({
-      trigger: page,
-      start: "top 80%",
-      once: true,
-      onEnter: () => {
-        gsap.set(careerTitles[index], { autoAlpha: 1 });
+    animating = true;
+    const fromTop = direction === -1;
+    const dFactor = fromTop ? -1 : 1;
+    
+    const tl = gsap.timeline({
+      defaults: { duration: 1, ease: "power1.inOut" },
+      onComplete: () => {
+        animating = false;
         
-        gsap.fromTo(titleChars, 
-          { 
-            autoAlpha: 0, 
-            yPercent: 150 
-          },
-          {
-            autoAlpha: 1,
-            yPercent: 0,
-            duration: 1,
-            ease: "power2",
-            stagger: {
-              each: 0.02,
-              from: "random"
-            }
-          }
-        );
-        
-        gsap.set(careerSubtitles[index], { autoAlpha: 1 });
-        
-        gsap.fromTo(subtitleChars, 
-          { 
-            autoAlpha: 0, 
-            yPercent: 150 
-          },
-          {
-            autoAlpha: 1,
-            yPercent: 0,
-            duration: 1,
-            ease: "power2",
-            stagger: {
-              each: 0.02,
-              from: "random"
-            },
-            delay: 0.3
-          }
-        );
+        if (splitSubtitles[index]) {
+          gsap.delayedCall(0.2, () => {
+            const chars = splitSubtitles[index].chars;
+            
+            gsap.set(panelSubtitles[index], { autoAlpha: 1 });
+            gsap.fromTo(
+              chars,
+              { autoAlpha: 0, yPercent: 150 * dFactor },
+              {
+                autoAlpha: 1,
+                yPercent: 0,
+                duration: 0.8,
+                ease: "power2",
+                stagger: {
+                  each: 0.02,
+                  from: "random"
+                }
+              }
+            );
+          });
+        }
       }
     });
+
+    tl.to(
+      panelWrap,
+      {
+        y: -panelHeight * index,
+        duration: 1,
+        ease: "power1.inOut"
+      },
+      0
+    );
+
+    currentIndex = index;
+  }
+
+  // 👉 커리어 섹션 pin 설정 (end 값 수정)
+  ScrollTrigger.create({
+    trigger: careerSection,
+    start: "top top",
+    end: `+=${(numPanels - 1) * panelHeight}`, // 👈 numPanels → (numPanels - 1)
+    pin: true,
+    onEnter: () => {
+      sectionPinned = true;
+      if (currentIndex === -1) {
+        gotoPanel(0, 1);
+      }
+    },
+    onLeave: () => {
+      sectionPinned = false;
+    },
+    onEnterBack: () => {
+      sectionPinned = true;
+    },
+    onLeaveBack: () => {
+      sectionPinned = false;
+    }
+  });
+
+  // 스크롤 이벤트
+  let scrollTimeout;
+  let isScrolling = false;
+  
+  careerSection.addEventListener('wheel', (e) => {
+    if (!sectionPinned || animating || isScrolling) return;
+    
+    isScrolling = true;
+    clearTimeout(scrollTimeout);
+    
+    if (e.deltaY > 0) {
+      // 아래로 스크롤
+      if (currentIndex < numPanels - 1) {
+        e.preventDefault(); // 👈 마지막 패널 아니면 기본 스크롤 방지
+        gotoPanel(currentIndex + 1, 1);
+      }
+      // 👉 마지막 패널이면 e.preventDefault() 안 함 → 자연스럽게 다음 섹션으로
+    } else {
+      // 위로 스크롤
+      if (currentIndex > 0) {
+        e.preventDefault();
+        gotoPanel(currentIndex - 1, -1);
+      }
+    }
+    
+    scrollTimeout = setTimeout(() => {
+      isScrolling = false;
+    }, 1000);
+  }, { passive: false });
+
+  // 리사이즈
+  window.addEventListener("resize", () => {
+    ScrollTrigger.refresh();
   });
 }
+
