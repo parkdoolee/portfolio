@@ -396,29 +396,32 @@ if (projectSection) {
         ease: "none",
       });
 
-      // ===== 5단계: 복귀 (마지막 패널 제외) =====
-      if (i < panelCount - 1) {
-        masterTl.to(detail, {
-          opacity: 0,
-          duration: 0.5,
-        });
+      // ===== 5단계: 복귀 (모든 패널에서 복귀) =====
+      masterTl.to(detail, {
+        opacity: 0,
+        duration: 0.5,
+      });
 
-        masterTl.set(detail, {
-          visibility: "hidden",
-          y: 0,
-        });
+      masterTl.set(detail, {
+        visibility: "hidden",
+        y: 0,
+      });
 
-        masterTl.set(gallery, {
-          scale: 1,
-          x: 0,
-          y: 0,
-          transformOrigin: "50% 50%",
-        });
+      masterTl.set(gallery, {
+        scale: 1,
+        x: 0,
+        y: 0,
+        transformOrigin: "50% 50%",
+      });
 
-        masterTl.to(gallery, {
-          opacity: 1,
-          duration: 0.5,
-        });
+      masterTl.to(gallery, {
+        opacity: 1,
+        duration: 0.5,
+      });
+
+      // 마지막 패널 이후 갤러리가 잠시 보이도록
+      if (i === panelCount - 1) {
+        masterTl.to({}, { duration: 1 });
       }
     });
 
@@ -475,7 +478,7 @@ if (careerSection) {
   // 5개 패널을 순차적으로 보여주기 위해 총 높이를 설정합니다.
   // (패널 수 * 뷰포트 높이)
   gsap.set(careerSection, {
-    height: numPanels * panelHeight,
+    height: (numPanels - 1) * panelHeight + panelHeight,
   });
 
   // 2. 메인 전환 애니메이션 (Vertical Translation)
@@ -485,8 +488,7 @@ if (careerSection) {
       pin: true, // 섹션 전체를 뷰포트에 고정
       scrub: 1,
       start: "top top",
-      end: "bottom bottom",
-      // 스냅핑 설정: 0, 0.25, 0.5, 0.75, 1 (4번의 전환이므로 5개의 지점)
+      end: `+=${(numPanels - 1) * panelHeight}`, // 구체적인 스크롤 길이 지정
       snap: 1 / (numPanels - 1),
     },
   });
@@ -513,7 +515,7 @@ if (careerSection) {
     careerTl
       .fromTo(
         title,
-        { y: 50, scale: 0.9, opacity: 0, filter: "blur(10px)" },
+        { y: 0, scale: 0.9, opacity: 0, filter: "blur(10px)" },
         {
           y: 0,
           scale: 1,

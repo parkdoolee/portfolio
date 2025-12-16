@@ -478,7 +478,7 @@ main .project .project-detail .detail-content {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 100px 5rem;
+  padding: 0;
   background-color: #0a0a0a;
 }
 
@@ -486,6 +486,7 @@ main .project .project-detail .detail-content h3 {
   font-size: 48px;
   font-weight: 600;
   margin-bottom: 30px;
+  text-align: center;
 }
 
 main .project .project-detail .detail-content p {
@@ -493,6 +494,7 @@ main .project .project-detail .detail-content p {
   line-height: 1.8;
   color: #ccc;
   margin-bottom: 40px;
+  text-align: center;
 }
 
 main .project .project-detail .links {
@@ -504,10 +506,12 @@ main .project .project-detail .links {
 main .project .project-detail .links .btn_link {
   display: inline-block;
   padding: 15px 30px;
-  border: 1px solid #fff;
+  width: 100px;
+  border: .5px solid #fff;
   color: #fff;
   text-decoration: none;
   font-size: 16px;
+  text-align: center;
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -538,7 +542,7 @@ main .career .career_wrap {
 main .career .career_panels {
   display: block;
   width: 100%;
-  height: 500vh; /* 5개 섹션 * 100vh로 설정 (수직 배열을 위해) */
+  /* height: 500vh; 5개 섹션 * 100vh로 설정 (수직 배열을 위해) */
   position: absolute; /* 절대 위치 지정 */
 }
 
@@ -557,7 +561,7 @@ main .career .careerPage {
 
 main .career .careerPage .page_title {
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 80px;
