@@ -477,9 +477,9 @@ if (careerSection) {
   // 1. 전체 career 섹션 높이 설정
   // 5개 패널을 순차적으로 보여주기 위해 총 높이를 설정합니다.
   // (패널 수 * 뷰포트 높이)
-  gsap.set(careerSection, {
-    height: (numPanels - 1) * panelHeight + panelHeight,
-  });
+  // gsap.set(careerSection, {
+  //   height: (numPanels - 1) * panelHeight + panelHeight,
+  // });
 
   // 2. 메인 전환 애니메이션 (Vertical Translation)
   const careerTl = gsap.timeline({

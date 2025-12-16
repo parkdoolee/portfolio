@@ -400,7 +400,7 @@ main .project .gallery {
   height: 100vh;
   display: grid;
   gap: 4px;
-  grid-template-columns: 6fr 6fr 4fr;
+  grid-template-columns: 6fr 5fr 5fr;
   grid-template-rows: 1fr 1fr;
   transform-origin: 50% 50%;
 }
